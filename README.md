@@ -1,8 +1,8 @@
 # boids
-modeling group behavior using multiple independent agents
+modeling group behavior using multiple independent agents.  Based on Craig W.
+Reynolds Flocks, Herds, and Schools: A Distributed Behavior Model",
+Computer Graphics 21:4, pp. 25-34,
 
-# boids
-modeling group behavior using multiple independent agents
 
 # Group Assignments
 Configuration/User interface:
