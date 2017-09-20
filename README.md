@@ -7,8 +7,8 @@ Computer Graphics 21:4, pp. 25-34
 # Group Assignments
 Configuration/User interface:
 
-Denney, Isaac A
-Droege, Jonathan Linclon
+*Denney, Isaac A
+*Droege, Jonathan Linclon
 Gray, Anthony
 Skirmants, Luke
 Stratman, Dylan
