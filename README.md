@@ -27,6 +27,7 @@ Boid/Flock/Behavior
 * Rijks, Diana
 * Smith, Caleb
 * Van Iwaarden, River
+* Borner, Matthew
 
 World Control/Rendering
 
