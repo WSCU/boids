@@ -1,6 +1,6 @@
 
 import tkinter as tk
-import UI.Concrete
+import src.gui.Concrete
 #from tkinter import Tk, Text, LEFT, TOP, RIGHT, BOTTOM, BOTH, RAISED, X, N
 #from tkinter.ttk import Frame, Button, Style, Label, Entry
 
@@ -12,7 +12,7 @@ class GUI(tk.Frame):
         tk.Frame.__init__(self,master)
         self.master=master
         self.default_height=120
-        self.config = UI.Concrete.Config()
+        self.config = src.gui.Concrete.Config()
         self.init_ui()
 
     def init_ui(self):
