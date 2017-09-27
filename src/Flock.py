@@ -1,6 +1,4 @@
-
 import Boid
-
 
 class Flock:
     flockcount = 0
@@ -13,9 +11,11 @@ class Flock:
         self.flockcount += 1
         self.distance_matrix = []
         
-        
+        row = -1
         for i in range(num_boids):
-            boid_list.append(Boid(ident, position, vel, acc))
+            if i % 10 == 0:
+                row += 1
+            self.boid_list.append(Boid(i, (200 - 10*row, -20 + 4*i, 50), (-22, 0, 0), 0))
         
         
     def update(self):
@@ -25,5 +25,5 @@ class Flock:
     def dist_matrix(self):
         for i in range(len(self.boid_list)):
             for j in range(len(self.boid_list)-i):
-                self.boid_pos = something
-        return 0
+                # self.boid_pos = something
+        return
