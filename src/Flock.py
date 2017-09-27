@@ -18,14 +18,14 @@ class Flock:
         for i in range(num_boids):
             if i % 10 == 0:
                 row += 1
-            self.boids.append(Boid(self, i, P3(200 + 10 * row, -20 + 4 * i, 50), P3(-20, 0, 0)))
+            self.boids.append(Boid(i, P3(200 + 10 * row, -20 + 4 * i, 50), P3(-20, 0, 0), 0, self))
 
     def update(self, tick):
         for b in self.boids:
-            b.self.move(tick)  # add other things the Boid.move() needs
+            b.self.move_Boid(tick)  # add other things the Boid.move() needs
         self.dist_matrix()
 
     def dist_matrix(self):
         for i in range(len(self.boids)):
-            for j in range(len(self.boids)-i):
+            for j in range(len(self.boids) - i):
                 self.distance_matrix[i][j] = self.boids[i].position.distance(self.boids[j].position)
