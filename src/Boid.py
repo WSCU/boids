@@ -18,7 +18,7 @@ class Boid:
         
         self.vel = self.vel + rule1V + rule2V + rule3V # Add each rule's P3 to the boid's velocity
         
-        self.position += self.vel # Update position by adding the newly created velocity to the original position
+        self.position = self.position + self.vel * tick # Update position by adding the velocity and multiplying by the tick
         
         
         
