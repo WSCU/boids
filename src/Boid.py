@@ -12,11 +12,11 @@ class Boid:
     
     def move_Boid(self, tick): # Called to change the velocity and position of a particuliar boid
         
-        rule1V = rule1(self)  # Calculate rule's v3 from behaviors import
+        rule1V = rule1(self)  # Calculate rule's P3 from behaviors import
         rule2V = rule2(self)
         rule3V = rule3(self)
         
-        self.vel = self.vel + rule1V + rule2V + rule3V # Add each rule's v3 to the boid's velocity
+        self.vel = self.vel + rule1V + rule2V + rule3V # Add each rule's P3 to the boid's velocity
         
         self.position += self.vel # Update position by adding the newly created velocity to the original position
         
