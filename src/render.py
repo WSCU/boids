@@ -124,8 +124,6 @@ def draw():
             pygame.quit()
             quit()
 
-
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
     ground()
@@ -137,7 +135,7 @@ def draw():
         bird(bird_dict[each_bird])
 
     pygame.display.flip()
-    
+
 
 
 
