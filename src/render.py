@@ -72,12 +72,13 @@ def bird(vertices):
 
 
 #sets bird velocity (call to set and change velocity)
+#birdNum = 0 -> (# of birds added - 1)
 def bird_velocity(x_velocity, y_velocity, z_velocity, birdNum):
     bird_velocity_dict[birdNum] = [x_velocity, y_velocity, z_velocity]
 
 
-#initializes birds at a given x, y, z (call to place birds)
-def set_bird_vertices(x, y, z, birdNum = None):
+#initializes birds at a given x, y, z (call add a bird)
+def set_bird_vertices(x, y, z):
     new_vertices = []
     global bird_count
 
@@ -94,13 +95,8 @@ def set_bird_vertices(x, y, z, birdNum = None):
 
         new_vertices.append(new_vert)
 
-    if not birdNum:
-        bird_dict[bird_count] = new_vertices
-        bird_count += 1
-    else:
-        bird_dict[birdNum] = new_vertices
-
-    return
+    bird_dict[bird_count] = new_vertices
+    bird_count += 1
 
 
 #initiates display window (call one time to start display)
@@ -109,12 +105,8 @@ def start(width, hieght, depth):
     display = (width, hieght)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
 
-
     gluPerspective(45, (display[0]/display[1]), 0.1, depth)
-
-    glTranslatef(0, 0, 0)
-
-    glRotatef(0, 0, 0, 0)
+    #glTranslatef(0, 0, 0)
 
 
 #draws objects on screen (call each tick of the clock)
