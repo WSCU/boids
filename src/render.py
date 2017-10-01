@@ -137,16 +137,16 @@ def draw():
         bird(bird_dict[each_bird])
 
     pygame.display.flip()
-    pygame.time.wait(10)
+    
 
 
 
 if __name__ == "__main__":
     for num in range(100):
-        set_bird_vertices(random.randrange(-20, 20), random.randrange(-20, 20), random.randrange(-100, 0))
+        set_bird_vertices(random.randrange(-20, 20), random.randrange(0, 20), random.randrange(-100, 0))
     start(800, 600, 150)
     for num in range(100):
-        bird_velocity(random.randrange(-10, 10), random.randrange(-10, 10), random.randrange(-10, 10), num)
+        bird_velocity(random.randrange(-5, 5), random.randrange(-5, 5), random.randrange(-5, 5), num)
     while True:
         draw()
 
