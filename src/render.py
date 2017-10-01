@@ -28,7 +28,7 @@ ground_vertices = (
    )
 
 
-#draws the ground
+#draws the ground (render use only)
 def ground():
     glBegin(GL_QUADS)
     for verts in ground_vertices:
@@ -37,7 +37,46 @@ def ground():
     glEnd()
 
 
-#initializes birds at a given x, y, z
+#moves bird according to velocity (render use only)
+def update_birds(birdNum):
+    thisVelocity = bird_velocity_dict[birdNum]
+    thisBird = bird_dict[birdNum]
+
+    #changes the position of the birds vertices
+    for vert in thisBird:
+        vert[0] = vert[0] + thisVelocity[0] #x value
+        vert[1] = vert[1] + thisVelocity[1] #y value
+        vert[2] = vert[2] + thisVelocity[2] #z value
+
+    bird_dict[birdNum] = thisBird
+
+
+#used to display birds (render use only)
+def bird(vertices):
+    edges = (
+         (0, 1),
+        (0, 2),
+        (0, 3),
+        (0, 4),
+        (1, 2),
+        (1, 4),
+        (3, 2),
+        (3, 4)
+    )
+    glBegin(GL_LINES)
+    for edge in edges:
+        for vertex in edge:
+            glColor3fv((1,1,1))
+            glVertex3fv(vertices[vertex])
+    glEnd()
+
+
+#sets bird velocity (call to set and change velocity)
+def bird_velocity(x_velocity, y_velocity, z_velocity, birdNum):
+    bird_velocity_dict[birdNum] = [x_velocity, y_velocity, z_velocity]
+
+
+#initializes birds at a given x, y, z (call to place birds)
 def set_bird_vertices(x, y, z, birdNum = None):
     new_vertices = []
     global bird_count
@@ -64,46 +103,7 @@ def set_bird_vertices(x, y, z, birdNum = None):
     return
 
 
-#sets bird velocity
-def bird_velocity(x_velocity, y_velocity, z_velocity, birdNum):
-    bird_velocity_dict[birdNum] = [x_velocity, y_velocity, z_velocity]
-
-
-#moves bird according to velocity
-def update_birds(birdNum):
-    thisVelocity = bird_velocity_dict[birdNum]
-    thisBird = bird_dict[birdNum]
-
-    #changes the position of the birds vertices
-    for vert in thisBird:
-        vert[0] = vert[0] + thisVelocity[0] #x value
-        vert[1] = vert[1] + thisVelocity[1] #y value
-        vert[2] = vert[2] + thisVelocity[2] #z value
-
-    bird_dict[birdNum] = thisBird
-
-
-#used to display birds
-def bird(vertices):
-    edges = (
-         (0, 1),
-        (0, 2),
-        (0, 3),
-        (0, 4),
-        (1, 2),
-        (1, 4),
-        (3, 2),
-        (3, 4)
-    )
-    glBegin(GL_LINES)
-    for edge in edges:
-        for vertex in edge:
-            glColor3fv((1,1,1))
-            glVertex3fv(vertices[vertex])
-    glEnd()
-
-
-#initiates display window
+#initiates display window (call one time to start display)
 def start(width, hieght, depth):
     pygame.init()
     display = (width, hieght)
@@ -117,7 +117,7 @@ def start(width, hieght, depth):
     glRotatef(0, 0, 0, 0)
 
 
-#draws objects on screen, call each tick of the clock
+#draws objects on screen (call each tick of the clock)
 def draw():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
