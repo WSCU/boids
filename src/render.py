@@ -74,8 +74,6 @@ def update_birds(birdNum):
     thisVelocity = bird_velocity_dict[birdNum]
     thisBird = bird_dict[birdNum]
 
-    print(thisBird)
-
     #changes the position of the birds vertices
     for vert in thisBird:
         vert[0] = vert[0] + thisVelocity[0] #x value
