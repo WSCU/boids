@@ -3,6 +3,7 @@ from pygame import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
+
 import random
 import Flock
 import Boid
@@ -168,14 +169,20 @@ def draw():
 
     pygame.display.flip()
 
+def get_Flock(flock):
+    flock = flock
+    return flock
+
+flock = get_Flock()
 
 
 
 if __name__ == "__main__":
     #for num in range(100):
         #set_bird_vertices(random.randrange(-20, 20), random.randrange(0, 20), random.randrange(-100, 0))
-    flock = Flock.Flock(100, 0, 0)
+    #flock = Flock.Flock(100, 0, 0)
     # for b in flock.boids:
+
     for i in range(len(flock.boids)):
         set_bird_vertices(flock.boids[i].position.x, flock.boids[i].position.y, flock.boids[i].position.z)
         bird_velocity(flock.boids[i].vel.x, flock.boids[i].vel.y, flock.boids[i].vel.z, i)
@@ -184,4 +191,5 @@ if __name__ == "__main__":
     #     bird_velocity(random.randrange(-5, 5), random.randrange(-5, 5), random.randrange(-5, 5), num)
     while True:
         draw()
+
 
