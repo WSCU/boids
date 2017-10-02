@@ -4,6 +4,8 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 import random
+import Flock
+import Boid
 
 x = 800
 y = 600
@@ -26,6 +28,16 @@ ground_vertices = (
     (-100, -.10, -10),
     (100, -.10, -10)
    )
+buidling_vertices = (
+    (0,0,1),#0
+    (1,0,1),#1
+    (0,0,0),#2
+    (1,0,0),#3
+    (0,1,1),#4
+    (1,1,1),#5
+    (0,1,0),#6
+    (1,1,0)#7
+    )
 
 
 #draws the ground (render use only)
@@ -41,7 +53,7 @@ def ground():
 def update_birds(birdNum):
     thisVelocity = bird_velocity_dict[birdNum]
     thisBird = bird_dict[birdNum]
-
+    print(thisBird)
     #changes the position of the birds vertices
     for vert in thisBird:
         vert[0] = vert[0] + thisVelocity[0] #x value
@@ -76,6 +88,34 @@ def bird(vertices):
 def bird_velocity(x_velocity, y_velocity, z_velocity, birdNum):
     bird_velocity_dict[birdNum] = [x_velocity, y_velocity, z_velocity]
 
+def buidling(vertices):
+    edges = (
+        (0, 1),
+        (0, 4),
+        (1, 2),
+        (1, 5),
+        (2, 3),
+        (2, 6),
+        (3, 0),
+        (3, 7),
+        (4, 5),
+        (5, 6),
+        (6, 7),
+        (7, 4)
+    )
+    for edge in edges:
+        for vertex in edge:
+            glColor3fv((1,1,1))
+            glVertex3fv(vertices[vertex])
+    glEnd()
+
+def set_building(x, y, z, width, height, depth, color):
+    new_vertices = []
+
+
+
+
+    return
 
 #initializes birds at a given x, y, z (call add a bird)
 def set_bird_vertices(x, y, z):
@@ -105,7 +145,7 @@ def start(width, hieght, depth):
     display = (width, hieght)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
 
-    gluPerspective(45, (display[0]/display[1]), 0.1, depth)
+    gluPerspective(45 , (display[0]/display[1]), 0.1, depth)
     #glTranslatef(0, 0, 0)
 
 
@@ -132,11 +172,16 @@ def draw():
 
 
 if __name__ == "__main__":
-    for num in range(100):
-        set_bird_vertices(random.randrange(-20, 20), random.randrange(0, 20), random.randrange(-100, 0))
+    #for num in range(100):
+        #set_bird_vertices(random.randrange(-20, 20), random.randrange(0, 20), random.randrange(-100, 0))
+    flock = Flock.Flock(100, 0, 0)
+    # for b in flock.boids:
+    for i in range(len(flock.boids)):
+        set_bird_vertices(flock.boids[i].position.x, flock.boids[i].position.y, flock.boids[i].position.z)
+        bird_velocity(flock.boids[i].vel.x, flock.boids[i].vel.y, flock.boids[i].vel.z, i)
     start(800, 600, 150)
-    for num in range(100):
-        bird_velocity(random.randrange(-5, 5), random.randrange(-5, 5), random.randrange(-5, 5), num)
+    # for num in range(100):
+    #     bird_velocity(random.randrange(-5, 5), random.randrange(-5, 5), random.randrange(-5, 5), num)
     while True:
         draw()
 

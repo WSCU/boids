@@ -99,3 +99,9 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+src/Render.py
+
+src/render.py
+
+src/render.py

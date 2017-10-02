@@ -2,7 +2,7 @@ import P3 # imports 3-D vector class
 
 class Boid:
     
-    def __init__(self, id, position, vel, acc = 0, flock):
+    def __init__(self, id, position, vel, acc, flock):
         
         self.id = id                # holding a unique identifying int
         self.position = position    # P3 holding the position or (x, y, z) of the boid
