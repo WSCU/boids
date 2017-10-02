@@ -3,8 +3,8 @@ import P3
 
 
 class Flock:
-    flock_count = 0
-
+    flockcount = 0
+    
     def __init__(self, num_boids, center, radius): #possibly also orientation, maybe something about obstacles?
         self.num_boids = num_boids
         self.boids = []
