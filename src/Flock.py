@@ -3,7 +3,7 @@ import P3
 
 
 class Flock:
-    flockcount = 0
+    flock_count = 0
     
     def __init__(self, num_boids, center, radius): #possibly also orientation, maybe something about obstacles?
         self.num_boids = num_boids
@@ -16,7 +16,7 @@ class Flock:
         for i in range(num_boids):
             if i % 10 == 0:
                 row += 1
-            self.boids.append(Boid(i, P3(200 + 10 * row, -20 + 4 * i, 50), P3(-15, 0, 0), P3(0, 0, 0), self))
+            self.boids.append(Boid.Boid(i, P3.P3(200 + 10 * row, -20 + 4 * i, 50), P3.P3(-15, 0, 0), P3.P3(0, 0, 0)))
 
     def update(self, tick):
         for b in self.boids:
