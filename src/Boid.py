@@ -2,7 +2,7 @@ import P3 # imports 3-D vector class
 
 class Boid:
     
-    def __init__(self, flock, id, position, vel, acc = 0):
+    def __init__(self, flock, id, position, vel, acc = P3.P3(0, 0, 0):
         
         self.id = id                # holding a unique identifying int
         self.position = position    # P3 holding the position or (x, y, z) of the boid
@@ -16,18 +16,3 @@ class Boid:
         
         self.position = self.position + self.vel * tick # Update position by adding the velocity and multiplying by the tick
         
-        
-        
-        
-        
-        
-        
-        
-        
-    
-        
-        
-    
-    
-
-    
