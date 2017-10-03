@@ -18,6 +18,7 @@ bird_velocity_dict = {}
 building_dict = {}
 building_count = 0
 color_list = []
+boid_dict = {}
 
 bird_vertices = (
         (0, 0, 0),
@@ -75,7 +76,7 @@ def update_birds(birdNum):
 
 
 #used to display birds (render use only)
-def bird(vertices):
+def draw_bird(vertices):
     edges = (
         (0, 1),
         (0, 2),
@@ -177,25 +178,28 @@ def set_building(bx, by, bz, width, height, depth):
 
 
 #initializes birds at a given x, y, z (call add a bird)
-def set_bird_vertices(x, y, z):
+def make_bird_vertices(bird):
     new_vertices = []
     global bird_count
 
     for vert in bird_vertices:
         new_vert = []
 
-        new_x = vert[0] + x
-        new_y = vert[1] + y
-        new_z = vert[2] + z
+        new_x = vert[0] + bird.position.x
+        new_y = vert[1] + bird.position.y
+        new_z = vert[2] + bird.position.z
 
         new_vert.append(new_x)
         new_vert.append(new_y)
         new_vert.append(new_z)
 
+        # new_vertices.append(new_vert)
         new_vertices.append(new_vert)
 
-    bird_dict[bird_count] = new_vertices
-    bird_count += 1
+
+    #bird_dict[bird_count] = new_vertices
+    #bird_count += 1
+    return new_vertices
 
 
 #initiates display window (call one time to start display)
@@ -221,15 +225,18 @@ def draw():
 
     ground()
 
-    for each_bird in bird_velocity_dict:
-        update_birds(each_bird)
-
-    for each_bird in bird_dict:
-        bird(bird_dict[each_bird])
-
+    # for each_bird in bird_velocity_dict:
+    #     update_birds(each_bird)
+    #
+    # for each_bird in bird_dict:
+    #     bird(bird_dict[each_bird])
+    #
     for each_building in building_dict:
         building(building_dict[each_building], color_list[each_building])
-        #print(each_building)
+
+    for b in flock.boids:
+        v = make_bird_vertices(b)
+        draw_bird(v)
 
 
 
@@ -245,13 +252,16 @@ if __name__ == "__main__":
         #set_bird_vertices(random.randrange(-20, 20), random.randrange(0, 20), random.randrange(-100, 0))
     flock = Flock.Flock(100, 0, 0)
     # for b in flock.boids:
-
-    for i in range(len(flock.boids)):
-        set_bird_vertices(flock.boids[i].position.x, flock.boids[i].position.y, -(flock.boids[i].position.z))
-        bird_velocity(flock.boids[i].vel.x, flock.boids[i].vel.y, flock.boids[i].vel.z, i)
     start(800, 600, 1000)
+
+    for i in range(100):
+        draw()
+        #make_bird_vertices(flock.boids[i])
+        #bird_velocity(flock.boids[i].vel.x, flock.boids[i].vel.y, flock.boids[i].vel.z, i)
+
+
     # for num in range(100):
-    #     bird_velocity(flock.boids[num], random.randrange(-5, 5), random.randrange(-5, 5), num)
+    #     bird_velocity(random.randrange(-5, 5), random.randrange(-5, 5), random.randrange(-5, 5), num)
 
 
     for num in range(10):
