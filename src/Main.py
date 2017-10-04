@@ -10,20 +10,17 @@ z = 40
 c = 0
 r = 0
 buildings = {}
-Flocks =[]
 
 world = World(guiX,guiY,z,buildings)
 
+F1 = Flock(5, c, r)
 
-def createFlock(size, center, radious):  #adding Flocks to list should be done within the Flock constructor
-  F1 = Flock(size, center, radious)
-  Flocks.append(F1)
+def updateTick():
+  threading.Timer(0.05, F1.update).start()
+  print (world.timer.get_time_s())
 
-createFlock(5,c,r)
-
-def getFlocks():  #accessing flocks should be done within the flocks class
-  return Flocks
-
+#can change to pass update and tick to render
+F1.update(0.05)
 
 
 def printit():                           #this will be replaced with incremental function calls
