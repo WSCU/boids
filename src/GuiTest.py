@@ -5,12 +5,12 @@ class Application:
     def __init__(self):
         self.gui=src.Gui.GUI()
         self.is_visible=True
-        self.gui.start(self.tick,1500)
+        self.gui.start(self.on_tick,1500)
 
     def print_console(self):
         print("Hello")
 
-    def tick(self):
+    def on_tick(self):
         self.print_console()
         self.is_visible = not self.is_visible
         self.gui.set_visible(self.is_visible)
