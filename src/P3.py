@@ -34,9 +34,6 @@ class P3:
 if __name__ == "__main__":
     p1 = P3(1, 1, 1)
     p2 = P3(2, 5, 10)
-
-
-
     print(2 * p1)
     print(p1 * 2)
     print(p1 * p2)
