@@ -44,13 +44,35 @@ class Boid_Behavior:
         self.decay_weight=decay
 
 class GUI(tk.Frame):
-    def __init__(self,master):
-        tk.Frame.__init__(self,master)
-        self.master=master
+
+
+
+    def get_master(self):
+        return self.master
+
+    def start(self,tick_method,tick_wait=500):
+        if not self.__is_started:
+            self.__is_started = True
+            self.tick_method = tick_method
+            self.tick_wait = tick_wait
+
+            self.master.after(self.tick_wait, self.tick)
+            self.master.mainloop()
+
+    def tick(self):
+        self.tick_method()
+        self.master.after(self.tick_wait,self.tick)
+
+    def __init__(self):
+        self.__is_started = False
+        self.master = tk.Tk()
+        self.master.resizable(0, 0)
+
+        tk.Frame.__init__(self,self.master)
         self.default_height=120
         self.config = Config()
         self.init_ui()
-
+    
     def init_ui(self):
         self.init_position()
         self.init_controls()
@@ -145,13 +167,14 @@ class GUI(tk.Frame):
 
         return frame_flock
 
-    #def show(self):
-    #    root = tk.Tk()
-    #    root.resizable(0, 0)
-
-    #    app = GUI(root)
-
-    #    root.mainloop()
+    
+    def set_visible(self,value):
+        if isinstance(value,bool):
+            if value==True:
+                self.master.update()
+                self.master.deiconify()
+            else:
+                self.master.withdraw()
 
     def on_select(evt):
         w=evt.widget
@@ -160,9 +183,6 @@ class GUI(tk.Frame):
         r = value
 
 if __name__=='__main__':
-    root = tk.Tk()
-    root.resizable(0, 0)
-
-    app = GUI(root)
-
+    app = GUI()
     root.mainloop()
+
