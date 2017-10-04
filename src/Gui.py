@@ -45,40 +45,40 @@ class Boid_Behavior:
 
 class GUI(tk.Frame):
 
-
-
     def get_master(self):
         return self.master
 
-    def start(self,tick_method,tick_wait=500):
+    def start(self, tick_method=None, tick_wait=500):
         if not self.__is_started:
             self.__is_started = True
             self.tick_method = tick_method
             self.tick_wait = tick_wait
-
-            self.master.after(self.tick_wait, self.tick)
+            if self.tick_method != None:
+                self.master.after(self.tick_wait, self.tick)
             self.master.mainloop()
 
     def tick(self):
         self.tick_method()
-        self.master.after(self.tick_wait,self.tick)
+        self.master.after(self.tick_wait, self.tick)
 
     def __init__(self):
         self.__is_started = False
         self.master = tk.Tk()
         self.master.resizable(0, 0)
+        self.default_height = 120
+        self.tick_method = None
+        self.tick_wait = None
 
-        tk.Frame.__init__(self,self.master)
-        self.default_height=120
+        tk.Frame.__init__(self, self.master)
         self.config = Config()
         self.init_ui()
-    
+
     def init_ui(self):
         self.init_position()
         self.init_controls()
 
     def init_position(self):
-        self.master.title("Python Boids");
+        self.master.title("Python Boids")
         self.pack(fill=tk.BOTH, expand=True)
         self.app_window = tk.Toplevel(self.master)
         self.app_frame = tk.Frame(self.app_window)
@@ -90,7 +90,7 @@ class GUI(tk.Frame):
         self.ui_x = -7
         self.ui_y = 0
 
-        self.config.set_size((sw,sh-self.default_height))
+        self.config.set_size((sw, sh-self.default_height))
 
         self.master.geometry('%dx%d+%d+%d' % (sw, self.default_height, self.ui_x, self.ui_y))
 
@@ -111,26 +111,29 @@ class GUI(tk.Frame):
         frame_flock_list.pack(side=tk.LEFT, anchor=tk.N, padx=5, pady=5)
 
         frame_flock_list_1 = tk.Frame(frame_flock_list)
-        frame_flock_list_1.pack(side=tk.LEFT,padx=1)
+        frame_flock_list_1.pack(side=tk.LEFT, padx=1)
 
         label_flock = tk.Label(frame_flock_list_1, text="Flock")
         label_flock.pack(side=tk.TOP, padx=5, pady=5)
 
-        listbox_flocks_scrollbar = tk.Scrollbar(frame_flock_list_1,orient=tk.VERTICAL)
-        listbox_flocks = tk.Listbox(frame_flock_list_1,yscrollcommand=listbox_flocks_scrollbar.set,name='listbox_flocks',height=1,width=16)
+        listbox_flocks_scrollbar = tk.Scrollbar(frame_flock_list_1, orient=tk.VERTICAL)
+        listbox_flocks = tk.Listbox(\
+            frame_flock_list_1,\
+            yscrollcommand=listbox_flocks_scrollbar.set,\
+            name='listbox_flocks', height=1, width=16)
         #listbox_flocks_scrollbar.config(command=listbox_flocks_scrollbar.yview)
-        listbox_flocks_scrollbar.pack(side=tk.RIGHT,fill=tk.Y)
+        listbox_flocks_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        listbox_flocks.pack(side=tk.TOP,fill=tk.Y)
+        listbox_flocks.pack(side=tk.TOP, fill=tk.Y)
         listbox_flocks.insert(tk.END, "0")
         listbox_flocks.insert(tk.END, "1")
         listbox_flocks.bind('<<ListboxSelect>>', GUI.on_select)
 
         frame_flock_list_2 = tk.Frame(frame_flock_list)
-        frame_flock_list_2.pack(side=tk.LEFT,padx=1,fill=tk.BOTH)
+        frame_flock_list_2.pack(side=tk.LEFT, padx=1, fill=tk.BOTH)
 
-        button_remove_flock = tk.Button(frame_flock_list_2,text="Remove Flock")
-        button_remove_flock.pack(side=tk.BOTTOM,fill=tk.BOTH)
+        button_remove_flock = tk.Button(frame_flock_list_2, text="Remove Flock")
+        button_remove_flock.pack(side=tk.BOTTOM, fill=tk.BOTH)
 
         button_add_flock = tk.Button(frame_flock_list_2, text="Add Flock")
         button_add_flock.pack(side=tk.BOTTOM, fill=tk.BOTH)
@@ -167,22 +170,20 @@ class GUI(tk.Frame):
 
         return frame_flock
 
-    
-    def set_visible(self,value):
-        if isinstance(value,bool):
-            if value==True:
+    def set_visible(self, value):
+        if isinstance(value, bool):
+            if value == True:
                 self.master.update()
                 self.master.deiconify()
             else:
                 self.master.withdraw()
 
     def on_select(evt):
-        w=evt.widget
-        index=int(w.curselection()[0])
-        value=w.get(index)
+        w = evt.widget
+        index = int(w.curselection()[0])
+        value = w.get(index)
         r = value
 
 if __name__=='__main__':
     app = GUI()
-    root.mainloop()
-
+    app.start()
