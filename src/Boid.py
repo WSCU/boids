@@ -7,7 +7,7 @@ class Boid:
         self.id = id                # holding a unique identifying int
         self.position = position    # P3 holding the position or (x, y, z) of the boid
         self.velocity = velocity    # P3 holding the velosities of the boid
-        self.behavior = behavior    # Float holding the behavoir function
+        self.behavior = behavior    # Float holding the behavior function
         self.flock = flock          # Current flock holding boid object 
     
     def move_Boid(self, tick): # Called to change the velocity and position of a particuliar boid
