@@ -2,6 +2,7 @@ import Boid
 import P3
 import math
 import random
+import Behavior
 
 
 class Flock:
@@ -18,11 +19,11 @@ class Flock:
             theta = 2 * math.pi * random.random()
             x = r * math.cos(theta)
             y = r * math.sin(theta)
-            self.boids.append(Boid.Boid(self, i, P3.P3(x, y, 50) + center, P3.P3(-5, 0, 0), P3.P3(0, 0, 0)))
+            self.boids.append(Boid.Boid(self, i, P3.P3(x, y, 50) + center, P3.P3(5, 0, 0), Behavior.behavior))
 
     def update(self, tick):
         for b in self.boids:
-            b.move_Boid(self.distance_matrix, tick)
+            b.move_Boid(tick)
         self.update_dist_matrix()
 
     def update_dist_matrix(self):

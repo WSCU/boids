@@ -7,6 +7,7 @@ from OpenGL.GLUT import *
 import random
 import Flock
 import Boid
+import P3
 
 x = 800
 y = 600
@@ -250,19 +251,9 @@ def draw():
 if __name__ == "__main__":
     #for num in range(100):
         #set_bird_vertices(random.randrange(-20, 20), random.randrange(0, 20), random.randrange(-100, 0))
-    flock = Flock.Flock(100, 0, 0)
+    flock = Flock.Flock(100, P3.P3(-20, 0, 0), 20)
     # for b in flock.boids:
     start(800, 600, 1000)
-
-    for i in range(100):
-        draw()
-        #make_bird_vertices(flock.boids[i])
-        #bird_velocity(flock.boids[i].vel.x, flock.boids[i].vel.y, flock.boids[i].vel.z, i)
-
-
-    # for num in range(100):
-    #     bird_velocity(random.randrange(-5, 5), random.randrange(-5, 5), random.randrange(-5, 5), num)
-
 
     for num in range(10):
         color = (random.randrange(0, 2), random.randrange(0, 2), random.randrange(0, 2))
@@ -271,8 +262,19 @@ if __name__ == "__main__":
     for num in range(10):
         set_building(random.randrange(-10,10), random.randrange(-10,10), 0,random.randrange(2,20) , random.randrange(2,20), random.randrange(2,20))
 
-
-    while True:
+    while 1:
         draw()
+        for b in flock.boids:
+            b.move_Boid(.1)
+        #make_bird_vertices(flock.boids[i])
+        #bird_velocity(flock.boids[i].vel.x, flock.boids[i].vel.y, flock.boids[i].vel.z, i)
+
+
+    # for num in range(100):
+    #     bird_velocity(random.randrange(-5, 5), random.randrange(-5, 5), random.randrange(-5, 5), num)
+
+
+
+
 
 
