@@ -20,12 +20,15 @@ class P3:
         return P3(self.x+other.x, self.y+other.y, self.z+other.z)
 
     def distance(self, other=None):
-        other = other if not None else P3(0, 0, 0)
+        other = other if other is not None else P3(0, 0, 0)
         return math.sqrt((self.x+other.x)**2 + (self.y+other.y)**2 + (self.z+other.z)**2)
 
     def normalize(self):
-        magnitude = self.distance()
+        magnitude = self.distance() if self.distance() != 0 else 1
         return P3(self.x/magnitude, self.y/magnitude, self.z/magnitude)
+
+    def vectorTo(self, other):
+        return P3(other.x - self.x, other.y - self.y, other.z - self.z)
 
     def __str__(self):
         return '(' + str(self.x) + ', ' + str(self.y) + ', ' + str(self.z) + ')'
@@ -37,4 +40,7 @@ if __name__ == "__main__":
     print(2 * p1)
     print(p1 * 2)
     print(p1 * p2)
+    print(P3.normalize(p1))
+    print(1.123 * p1)
+
 
