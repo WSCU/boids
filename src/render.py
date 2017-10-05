@@ -256,7 +256,7 @@ if __name__ == "__main__":
 
     for num in range(10):
         Buildings(random.randrange(-10, 10), random.randrange(-10, 10), random.randrange(1, 10), random.randrange(1, 10), random.randrange(1, 10), (random.randrange(0,2), random.randrange(0,2), random.randrange(0,2)))
-    # for b in flock.boids:
+        
     start(800, 600, 1000)
 
 
@@ -265,6 +265,3 @@ if __name__ == "__main__":
         for b in flock.boids:
             b.move_Boid(.1)
 
-
-    # for num in range(100):
-    #     bird_velocity(random.randrange(-5, 5), random.randrange(-5, 5), random.randrange(-5, 5), num)
