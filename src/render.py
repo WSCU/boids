@@ -51,6 +51,16 @@ building_vertices = (
     (0,1,-1)#7
     )
 
+#call to create display
+def start(width, hieght, depth):
+    pygame.init()
+    display = (width, hieght)
+    pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
+
+    gluPerspective(45, (display[0]/display[1]), 0.1, depth)
+    glTranslatef(-10, 30, -250)
+    glRotatef(-45, 1, 1, 1)
+
 
 # draws the ground (render use only)
 def ground():
@@ -62,44 +72,9 @@ def ground():
     glEnd()
 
 
-def set_building(bx, by, bz, width, height, depth):
-    new_vertices = []
-    final_vertices = []
-    global building_count
-
-    #positoning
-    for vert in building_vertices:
-        new_vert = []
-
-        new_x = vert[0] + bx
-        new_y = vert[1] + by
-        new_z = vert[2] + bz
-
-        new_vert.append(new_x)
-        new_vert.append(new_y)
-        new_vert.append(new_z)
-
-        new_vertices.append(new_vert)
-
-    #scaling
-    for nvert in new_vertices:
-        fnew_vert = []
-
-        newv_x = nvert[0] * width
-        newv_y = nvert[1] * depth
-        newv_z = nvert[2] * height
-
-        fnew_vert.append(newv_x)
-        fnew_vert.append(newv_y)
-        fnew_vert.append(newv_z)
-
-        final_vertices.append(fnew_vert)
-
-    building_dict[building_count] = final_vertices
-    building_count += 1
-    color_list.append(color)
 
 
+#creates vertices for individual birds (render use only)
 def make_bird_vertices(bird):
     new_vertices = []
     global bird_count
@@ -144,12 +119,66 @@ def draw_bird(vertices):
     glEnd()
 
 
+    glBegin(GL_LINES)
+    for edge in edges:
+        for vertex in edge:
+            glColor3fv((1, 1, 1))
+            glVertex3fv(vertices[vertex])
+    glEnd()
 
-def bird_velocity(x_velocity, y_velocity, z_velocity, birdNum):
-    bird_velocity_dict[birdNum] = [x_velocity, y_velocity, z_velocity]
 
-def building(vertices, color):
-    edges = (
+#call to create a new building
+class Buildings(object):
+    _registry = []
+
+    def __init__(self, x, y, width, height, depth, color):
+        self._registry.append(self)
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.depth = depth
+        self.color = color
+
+    #sets building verts (render use only)
+    def set_building(self):
+        new_vertices = []
+        final_vertices = []
+        global building_count
+
+        #positoning
+        for vert in building_vertices:
+            new_vert = []
+
+            new_x = vert[0] + self.x
+            new_y = vert[1] + self.y
+            new_z = vert[2]
+
+            new_vert.append(new_x)
+            new_vert.append(new_y)
+            new_vert.append(new_z)
+
+            new_vertices.append(new_vert)
+
+        #scaling
+        for nvert in new_vertices:
+            fnew_vert = []
+
+            newv_x = nvert[0] * self.width
+            newv_y = nvert[1] * self.depth
+            newv_z = nvert[2] * self.height
+
+            fnew_vert.append(newv_x)
+            fnew_vert.append(newv_y)
+            fnew_vert.append(newv_z)
+
+            final_vertices.append(fnew_vert)
+
+        return final_vertices
+
+    #displays buildings (render use only)
+    def draw_building(self):
+        edges = (
         (0, 1),
         (0, 4),
         (1, 2),
@@ -162,73 +191,35 @@ def building(vertices, color):
         (5, 6),
         (6, 7),
         (7, 4)
-    )
-    surfaces = (
-        (0,1,2,3),
-        (2,6,5,1),
-        (0,1,4,5),
-        (0,3,7,4),
-        (3,7,6,2),
-        (7,4,5,6)
-    )
-    glBegin(GL_QUADS)
-    for surface in surfaces:
-        for vertex in surface:
-            glColor3fv(color)
-            glVertex3fv(vertices[vertex])
-    glEnd()
+        )
+        surfaces = (
+            (0,1,2,3),
+            (2,6,5,1),
+            (0,1,4,5),
+            (0,3,7,4),
+            (3,7,6,2),
+            (7,4,5,6)
+        )
+        vertices = Buildings.set_building(self)
+        glBegin(GL_QUADS)
+        for surface in surfaces:
+            for vertex in surface:
+                glColor3fv(self.color)
+                glVertex3fv(vertices[vertex])
+        glEnd()
 
 
-    glBegin(GL_LINES)
-    for edge in edges:
-        for vertex in edge:
-            glColor3fv((1, 1, 1))
-            glVertex3fv(vertices[vertex])
-    glEnd()
+        glBegin(GL_LINES)
+        for edge in edges:
+            for vertex in edge:
+                glColor3fv((1, 1, 1))
+                glVertex3fv(vertices[vertex])
+        glEnd()
 
-
-
-def start(width, hieght, depth):
-    pygame.init()
-    display = (width, hieght)
-    pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
-
-    gluPerspective(45, (display[0]/display[1]), 0.1, depth)
-    glTranslatef(-10, 30, -250)
-    glRotatef(-45, 1, 1, 1)
-
-
+#call to create new flock
 class Render:
     def __init__(self, flock):
         self.flock = flock
-
-
-
-    #moves bird according to velocity (render use only)
-    # def update_birds(birdNum):
-    #     thisVelocity = bird_velocity_dict[birdNum]
-    #     thisBird = bird_dict[birdNum]
-    #     #print(thisBird)
-    #     #changes the position of the birds vertices
-    #     for vert in thisBird:
-    #         vert[0] = vert[0] + thisVelocity[0] #x value
-    #         vert[1] = vert[1] + thisVelocity[1] #y value
-    #         vert[2] = vert[2] + thisVelocity[2] #z value
-    #
-    #     bird_dict[birdNum] = thisBird
-
-
-    #sets bird velocity (call to set and change velocity)
-    #birdNum = 0 -> (# of birds added - 1)
-
-
-    #initializes birds at a given x, y, z (call add a bird)
-
-
-
-    #initiates display window (call one time to start display)
-
-
 
     #draws objects on screen (call each tick of the clock)
     def draw(self):
@@ -239,17 +230,10 @@ class Render:
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-
         ground()
 
-        # for each_bird in bird_velocity_dict:
-        #     update_birds(each_bird)
-        #
-        # for each_bird in bird_dict:
-        #     bird(bird_dict[each_bird])
-        #
-        for each_building in building_dict:
-            building(building_dict[each_building], color_list[each_building])
+        for building in Buildings._registry:
+            Buildings.draw_building(building)
 
         for b in self.flock.boids:
             v = make_bird_vertices(b)
@@ -270,15 +254,11 @@ if __name__ == "__main__":
     flock = Flock.Flock(100, P3.P3(-20, 0, 0), 20)
     f = Render(flock)
 
+    for num in range(10):
+        Buildings(random.randrange(-10, 10), random.randrange(-10, 10), random.randrange(1, 10), random.randrange(1, 10), random.randrange(1, 10), (random.randrange(0,2), random.randrange(0,2), random.randrange(0,2)))
     # for b in flock.boids:
     start(800, 600, 1000)
 
-    for num in range(10):
-        color = (random.randrange(0, 2), random.randrange(0, 2), random.randrange(0, 2))
-        color_list.append(color)
-
-    for num in range(10):
-        set_building(random.randrange(-10,10), random.randrange(-10,10), 0,random.randrange(2,20) , random.randrange(2,20), random.randrange(2,20))
 
     while 1:
         f.draw()
@@ -286,12 +266,5 @@ if __name__ == "__main__":
             b.move_Boid(.1)
 
 
-
     # for num in range(100):
     #     bird_velocity(random.randrange(-5, 5), random.randrange(-5, 5), random.randrange(-5, 5), num)
-
-
-
-
-
-
