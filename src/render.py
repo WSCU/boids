@@ -13,13 +13,7 @@ x = 800
 y = 600
 z = 1000
 
-bird_count = 0
-bird_dict = {}
-bird_velocity_dict = {}
-building_dict = {}
-building_count = 0
-color_list = []
-boid_dict = {}
+
 
 bird_vertices = (
             (0, 0, 0),
@@ -72,12 +66,9 @@ def ground():
     glEnd()
 
 
-
-
 #creates vertices for individual birds (render use only)
 def make_bird_vertices(bird):
     new_vertices = []
-    global bird_count
 
     for vert in bird_vertices:
         new_vert = []
@@ -90,11 +81,8 @@ def make_bird_vertices(bird):
         new_vert.append(new_y)
         new_vert.append(new_z)
 
-        # new_vertices.append(new_vert)
         new_vertices.append(new_vert)
 
-    # bird_dict[bird_count] = new_vertices
-    # bird_count += 1
     return new_vertices
 
 
@@ -249,14 +237,12 @@ class Render:
 
 
 if __name__ == "__main__":
-    #for num in range(100):
-        #set_bird_vertices(random.randrange(-20, 20), random.randrange(0, 20), random.randrange(-100, 0))
     flock = Flock.Flock(100, P3.P3(-20, 0, 0), 20)
     f = Render(flock)
 
     for num in range(10):
         Buildings(random.randrange(-10, 10), random.randrange(-10, 10), random.randrange(1, 10), random.randrange(1, 10), random.randrange(1, 10), (random.randrange(0,2), random.randrange(0,2), random.randrange(0,2)))
-    # for b in flock.boids:
+
     start(800, 600, 1000)
 
 
@@ -265,6 +251,3 @@ if __name__ == "__main__":
         for b in flock.boids:
             b.move_Boid(.1)
 
-
-    # for num in range(100):
-    #     bird_velocity(random.randrange(-5, 5), random.randrange(-5, 5), random.randrange(-5, 5), num)
