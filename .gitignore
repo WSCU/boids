@@ -106,3 +106,5 @@ ENV/
 .idea/boids.iml
 .idea/boids.iml
 .idea/misc.xml
+*.iml
+.idea/workspace.xml
