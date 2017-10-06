@@ -30,6 +30,9 @@ class P3:
         magnitude = self.distance() if self.distance() != 0 else 1
         return P3(self.x/magnitude, self.y/magnitude, self.z/magnitude)
 
+    def vectorTo(self, other):
+        return P3(other.x-self.x, other.y-self.y, other.z-self.z)
+
     def __str__(self):
         return '(' + str(self.x) + ', ' + str(self.y) + ', ' + str(self.z) + ')'
 
@@ -37,6 +40,9 @@ class P3:
 if __name__ == "__main__":
     p1 = P3(1, 1, 1)
     p2 = P3(2, 5, 10)
+
+
+
     print(2 * p1)
     print(p1 * 2)
     print(p1 * p2)
@@ -49,3 +55,4 @@ if __name__ == "__main__":
     print(p3 - p1)
 
 
+    print(P3.normalize(p2))
