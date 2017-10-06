@@ -34,7 +34,7 @@ def behavior(boid):
     # Robin: Cod = .35, mass = 0.0182kg, density = 1.09kg/m^3, body frontal area = 4.6cm^2
     # c = coefficient of drag * density * perpendicular area * 1/2
     c = .0088 * 1
-    drag = c * boid.vel.distance()**2
+    drag = c * boid.velocity.distance()**2
     drag_vector = -1 * boid.velocity * drag
 
     delta_vel = 50*v1 + 800*v2 + 5000*v3  #  - drag_vector
