@@ -18,10 +18,10 @@ def behavior(boid):
     # velocity matching
     v2 = P3.P3(0, 0, 0)
     for b in nby:
-        v2 += b.vel
+        v2 += b.velocity
     if len(nby) > 1:
         v2 *= 1/len(nby)
-    v2 -= boid.vel
+    v2 -= boid.velocity
 
     # flock centering
     v3 = P3.P3(0, 0, 0)
@@ -35,7 +35,7 @@ def behavior(boid):
     # c = coefficient of drag * density * perpendicular area * 1/2
     c = .0088 * 1
     drag = c * boid.vel.distance()**2
-    drag_vector = -1 * boid.vel * drag
+    drag_vector = -1 * boid.velocity * drag
 
     delta_vel = 50*v1 + 800*v2 + 5000*v3  #  - drag_vector
 
