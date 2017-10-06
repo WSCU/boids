@@ -64,6 +64,9 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+#pycharm
+.idea/
+
 # PyBuilder
 target/
 
@@ -99,9 +102,18 @@ ENV/
 
 # mypy
 .mypy_cache/
+<<<<<<< HEAD
 
 src/Render.py
 
 src/render.py
 
 src/render.py
+=======
+.vscode/
+.idea/boids.iml
+.idea/boids.iml
+.idea/misc.xml
+*.iml
+.idea/workspace.xml
+>>>>>>> master

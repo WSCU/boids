@@ -1,39 +1,7 @@
 
 import tkinter as tk
 
-class Config:
 
-    def __init__(self):
-        self.size=(0,0)
-        self.flocks=0
-        self.boids=0
-        self.initial_flock_placement=(0,0)
-        self.boid_behavior = Boid_Behavior()
-
-    def get_size(self):
-        return self.size
-    def set_size(self,size):
-        self.size=(float(size[0]),float(size[1]))
-
-    def get_flocks(self):
-        return self.flocks
-    def set_flocks(self,count):
-        self.flocks=int(count)
-
-    def get_boids(self):
-        return self.boids
-    def set_boids(self,count):
-        self.boids=count
-
-    def get_initial_flock_placement(self):
-        return self.initial_flock_placement
-    def set_initial_flock_placement(self,position):
-        self.initial_flock_placement=(float(position[0]),float(position[1]))
-
-    def get_boid_behavior(self):
-        return self.boid_behavior
-    def set_boid_behavior(self,perception,distance,decay):
-        self.boid_behavior=Boid_Behavior(perception=0,distance=0,decay=0)
 
 
 class Boid_Behavior:
@@ -44,10 +12,32 @@ class Boid_Behavior:
         self.decay_weight=decay
 
 class GUI(tk.Frame):
-    def __init__(self,master):
-        tk.Frame.__init__(self,master)
-        self.master=master
-        self.default_height=120
+
+    def get_master(self):
+        return self.master
+
+    def start(self, tick_method=None, tick_wait=500):
+        if not self.__is_started:
+            self.__is_started = True
+            self.tick_method = tick_method
+            self.tick_wait = tick_wait
+            if self.tick_method != None:
+                self.master.after(self.tick_wait, self.tick)
+            self.master.mainloop()
+
+    def tick(self):
+        self.tick_method()
+        self.master.after(self.tick_wait, self.tick)
+
+    def __init__(self):
+        self.__is_started = False
+        self.master = tk.Tk()
+        self.master.resizable(0, 0)
+        self.default_height = 120
+        self.tick_method = None
+        self.tick_wait = None
+
+        tk.Frame.__init__(self, self.master)
         self.config = Config()
         self.init_ui()
 
@@ -56,7 +46,7 @@ class GUI(tk.Frame):
         self.init_controls()
 
     def init_position(self):
-        self.master.title("Python Boids");
+        self.master.title("Python Boids")
         self.pack(fill=tk.BOTH, expand=True)
         self.app_window = tk.Toplevel(self.master)
         self.app_frame = tk.Frame(self.app_window)
@@ -68,7 +58,7 @@ class GUI(tk.Frame):
         self.ui_x = -7
         self.ui_y = 0
 
-        self.config.set_size((sw,sh-self.default_height))
+        self.config.set_size((sw, sh-self.default_height))
 
         self.master.geometry('%dx%d+%d+%d' % (sw, self.default_height, self.ui_x, self.ui_y))
 
@@ -89,26 +79,29 @@ class GUI(tk.Frame):
         frame_flock_list.pack(side=tk.LEFT, anchor=tk.N, padx=5, pady=5)
 
         frame_flock_list_1 = tk.Frame(frame_flock_list)
-        frame_flock_list_1.pack(side=tk.LEFT,padx=1)
+        frame_flock_list_1.pack(side=tk.LEFT, padx=1)
 
         label_flock = tk.Label(frame_flock_list_1, text="Flock")
         label_flock.pack(side=tk.TOP, padx=5, pady=5)
 
-        listbox_flocks_scrollbar = tk.Scrollbar(frame_flock_list_1,orient=tk.VERTICAL)
-        listbox_flocks = tk.Listbox(frame_flock_list_1,yscrollcommand=listbox_flocks_scrollbar.set,name='listbox_flocks',height=1,width=16)
+        listbox_flocks_scrollbar = tk.Scrollbar(frame_flock_list_1, orient=tk.VERTICAL)
+        listbox_flocks = tk.Listbox(\
+            frame_flock_list_1,\
+            yscrollcommand=listbox_flocks_scrollbar.set,\
+            name='listbox_flocks', height=1, width=16)
         #listbox_flocks_scrollbar.config(command=listbox_flocks_scrollbar.yview)
-        listbox_flocks_scrollbar.pack(side=tk.RIGHT,fill=tk.Y)
+        listbox_flocks_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        listbox_flocks.pack(side=tk.TOP,fill=tk.Y)
+        listbox_flocks.pack(side=tk.TOP, fill=tk.Y)
         listbox_flocks.insert(tk.END, "0")
         listbox_flocks.insert(tk.END, "1")
         listbox_flocks.bind('<<ListboxSelect>>', GUI.on_select)
 
         frame_flock_list_2 = tk.Frame(frame_flock_list)
-        frame_flock_list_2.pack(side=tk.LEFT,padx=1,fill=tk.BOTH)
+        frame_flock_list_2.pack(side=tk.LEFT, padx=1, fill=tk.BOTH)
 
-        button_remove_flock = tk.Button(frame_flock_list_2,text="Remove Flock")
-        button_remove_flock.pack(side=tk.BOTTOM,fill=tk.BOTH)
+        button_remove_flock = tk.Button(frame_flock_list_2, text="Remove Flock")
+        button_remove_flock.pack(side=tk.BOTTOM, fill=tk.BOTH)
 
         button_add_flock = tk.Button(frame_flock_list_2, text="Add Flock")
         button_add_flock.pack(side=tk.BOTTOM, fill=tk.BOTH)
@@ -145,24 +138,20 @@ class GUI(tk.Frame):
 
         return frame_flock
 
-    #def show(self):
-    #    root = tk.Tk()
-    #    root.resizable(0, 0)
-
-    #    app = GUI(root)
-
-    #    root.mainloop()
+    def set_visible(self, value):
+        if isinstance(value, bool):
+            if value == True:
+                self.master.update()
+                self.master.deiconify()
+            else:
+                self.master.withdraw()
 
     def on_select(evt):
-        w=evt.widget
-        index=int(w.curselection()[0])
-        value=w.get(index)
+        w = evt.widget
+        index = int(w.curselection()[0])
+        value = w.get(index)
         r = value
 
 if __name__=='__main__':
-    root = tk.Tk()
-    root.resizable(0, 0)
-
-    app = GUI(root)
-
-    root.mainloop()
+    app = GUI()
+    app.start()
