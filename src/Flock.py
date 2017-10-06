@@ -21,13 +21,19 @@ class Flock:
             x = r * math.cos(theta)
             y = r * math.sin(theta)
 <<<<<<< HEAD
+<<<<<<< HEAD
             self.boids.append(Boid.Boid(self, i, P3.P3(x, y, 50) + center, P3.P3(5, 0, 0), Behavior.behavior))
 =======
+=======
+>>>>>>> master
             # eventually velocity is taken from config file
             v = P3.P3(1*random.random()*random.randrange(-1, 2, 2)+5, 1*random.random()*random.randrange(-1, 2, 2)+5, 0)
             self.boids.append(Boid.Boid(self, i, P3.P3(x, y, 0) + center + P3.P3(0, 0, 2*random.randrange(-5, 6, 10)),
                                         v, Behavior.behavior))
             self.update_dist_matrix()
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 
     def update(self, tick):

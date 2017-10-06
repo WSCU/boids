@@ -3,6 +3,7 @@ import P3
 
 def behavior(boid):
 <<<<<<< HEAD
+<<<<<<< HEAD
     max_acc = 1
     r = 10
     nby = [other for other in boid.flock.boids if boid.id > other.id and boid.flock.distance_matrix[boid.id][other.id] <
@@ -16,6 +17,8 @@ def behavior(boid):
     for other in avoid:
         v1 += other.position.vectorTo(boid.position) * (1 / boid.position.distance(other.position))
 =======
+=======
+>>>>>>> master
     max_acc = .1
     max_vel = 25
     r = 200
@@ -28,20 +31,29 @@ def behavior(boid):
     v1 = P3.P3(0, 0, 0)
     for other in avoid:
         v1 += other.position - boid.position * (1 / boid.position.distance(other.position)**2)
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 
     # velocity matching
     v2 = P3.P3(0, 0, 0)
     for b in nby:
 <<<<<<< HEAD
+<<<<<<< HEAD
         v2 += b.vel
     if len(nby) > 1:
         v2 *= 1/len(nby)
 =======
+=======
+>>>>>>> master
         v2 += b.velocity
     if len(nby) > 1:
         v2 *= 1/len(nby)
     v2 -= boid.velocity
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 
     # flock centering
@@ -50,12 +62,15 @@ def behavior(boid):
         v3 += b.position
     if len(nby) > 1:
 <<<<<<< HEAD
+<<<<<<< HEAD
         v3 *= 1 / len(nby)  # might need parenthesis around division
 
     behavior_vel = 10*v1 + 1*v2 + 1*v3
     delta_vel = behavior_vel + -1 * boid.vel
     return P3.P3.normalize(delta_vel)
 =======
+=======
+>>>>>>> master
         v3 *= 1 / len(nby)
     v3 -= boid.position
 
@@ -70,4 +85,7 @@ def behavior(boid):
     acc = P3.P3.normalize(delta_vel) * max_acc
 
     return acc if acc.distance() < delta_vel.distance() else delta_vel
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master

@@ -103,6 +103,7 @@ ENV/
 # mypy
 .mypy_cache/
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 src/Render.py
 
@@ -110,10 +111,15 @@ src/render.py
 
 src/render.py
 =======
+=======
+>>>>>>> master
 .vscode/
 .idea/boids.iml
 .idea/boids.iml
 .idea/misc.xml
 *.iml
 .idea/workspace.xml
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
