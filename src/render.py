@@ -237,7 +237,7 @@ class Render:
 
 
 if __name__ == "__main__":
-    flock = Flock.Flock(100, P3.P3(-20, 0, 0), 20)
+    flock = Flock.Flock(20, P3.P3(-75, -75, 0), 10)
     f = Render(flock)
 
     for num in range(10):
