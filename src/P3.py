@@ -29,6 +29,9 @@ class P3:
     def normalize(self):
         magnitude = self.distance() if self.distance() != 0 else 1
         return P3(self.x/magnitude, self.y/magnitude, self.z/magnitude)
+    
+    def magnitude(self):
+        return math.sqrt(math.pow(self.x, 2)+ math.pow(self.y, 2) + math.pow(self.z, 2))
 
     def __str__(self):
         return '(' + str(self.x) + ', ' + str(self.y) + ', ' + str(self.z) + ')'
