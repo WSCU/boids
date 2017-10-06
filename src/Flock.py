@@ -8,7 +8,7 @@ import random
 class Flock:
     flock_count = 0
 
-    def __init__(self, num_boids, center=P3.P3(0, 0, 0), radius=20, velocity=P3.P3(5, 0, 0)): #possibly also orientation, maybe something about obstacles?
+    def __init__(self, num_boids, center=P3.P3(0, 0, 0), radius=20): #possibly also orientation, maybe something about obstacles?
         Flock.flock_count += 1
         self.boids = []
         self.distance_matrix = [[0 for _ in range(num_boids)] for _ in range(num_boids)]
@@ -19,8 +19,11 @@ class Flock:
             theta = 2 * math.pi * random.random()
             x = r * math.cos(theta)
             y = r * math.sin(theta)
-            self.boids.append(Boid.Boid(self, i, P3.P3(x, y, 0) + center, velocity, Behavior.behavior))
-        self.update_dist_matrix()
+            # eventually velocity is taken from config file
+            v = P3.P3(1*random.random()*random.randrange(-1, 2, 2)+5, 1*random.random()*random.randrange(-1, 2, 2)+5, 0)
+            self.boids.append(Boid.Boid(self, i, P3.P3(x, y, 0) + center + P3.P3(0, 0, 2*random.randrange(-5, 6, 10)),
+                                        v, Behavior.behavior))
+            self.update_dist_matrix()
 
     def update(self, tick):
         for b in self.boids:
@@ -34,7 +37,7 @@ class Flock:
 
 
 if __name__ == '__main__':
-    flock = Flock(20, P3.P3(-100, 0, 50), 20)
+    flock = Flock(20, P3.P3(-200, -100, 50), 20)
     for i in range(20):
         flock.update(1)
         print()
