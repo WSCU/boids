@@ -112,3 +112,4 @@ ENV/
 # latex files
 *.log
 *.aux
+*.ltx~
