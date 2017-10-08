@@ -1,4 +1,3 @@
-from Timer import Timer
 class World:
 
     def __init__ (self,screen, objects,flocks):

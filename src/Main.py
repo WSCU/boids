@@ -19,10 +19,10 @@ F1_r = Render(F1)
 
 for i in range(7000):
     F1_r.draw()
-    for b in F1.boids:
+    for b in F1.boids:  #move all boidds in flock
         b.move_Boid(0.1)
 
-    time.sleep(tick)
+    time.sleep(tick) #wait for length of tick
 
 
 
