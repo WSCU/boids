@@ -1,9 +1,9 @@
 #world_01
 import WorldObjects
-from World import World
-import threading
+import World
 from src.Flock import Flock
 from src.render import Render
+import render
 import time
 import P3
 
@@ -15,14 +15,17 @@ r = 0
 buildings = {}
 tick = 0.05
 
-world = World(guiX,guiY,z,buildings)
+F1 = Flock(50, P3.P3(-20, 0, 0), 20)
+render.start(800, 600, 1000)
 
-F1 = Flock(100, P3.P3(-20, 0, 0), 20)
 F1_r = Render(F1)
 
 for i in range(7000):
-  print(tick)
+ # print(tick)
   F1_r.draw()
+  for b in F1.boids:
+    b.move_Boid(0.1)
+
   time.sleep(tick)
 
 
