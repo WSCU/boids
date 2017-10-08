@@ -1,3 +1,3 @@
 # Boid Behavior
 
-Each boid $\alpha$
+Each boid \\(\alpha\\)
