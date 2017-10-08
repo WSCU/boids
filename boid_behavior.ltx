@@ -3,9 +3,74 @@
 \usepackage{amsmath}
 
 \begin{document}
-\begin{center}
-  \begin{large}
-    Boid Behavior
-  \end{large}
-\end{center}
+
+
+
+\section{Boid Behavior}
+
+
+Each boid maintains a position vector, $\vec{p}$, and a velocity
+vector, $\vec{v}$.  At each time step the boid calculates an
+acceleration vector,$\vec{a}$ based on local rules described below.
+The new velocity and positions vectors are calculated as:
+\begin{align*}
+  \vec{v}_{t+1} &= \vec{v}_t + \vec{a}_t \Delta t \\
+  \vec{p}_{t+1} &= \vec{p}_t + \vec{v}_{t+1} \Delta t
+\end{align*}
+
+\paragraph{Creating the acceleration vector}
+The acceleration vector is calculated from three vectors:
+\begin{enumerate}
+\item the difference between the mean position of the boid's local
+  neighbors (radius for local neighborhood is a parameter) and the
+  boid's current position,
+\item the difference between the mean velocity of the boid's local
+  neighbors and the boid's current velocity, and,
+\item a weighted sum of differences between close neighbors' positions
+  (controlled by a difference radius parameter) and boid's current
+  position as well as differences from stationary objects.
+\end{enumerate}
+
+Vector 1 represents the desire to be in the middle of the flock,
+vector 2 represents the desire to fly in the same direction and vector
+3 encodes obstacle avoidance.  Each of these desires is given a user
+controlled weight and the acceleration vector is constructed using one
+of two allocation techniques.  The length of acceleration vector is
+limited by a global constant.
+
+\paragraph{mean allocation} The three component vectors are weighted,
+summed, and rescaled to the maximum acceleration.
+
+\paragraph{priority allocation} The three component vectors are weighted, ranked
+and added to the acceleration vector in amounts that respect the
+maximum acceleration.  Vector 3 is of highest priority so if after
+weighting its length exceeds the maximum acceleration it is rescaled
+and used as the acceleration.  If the weighted highest priority vector
+does not exceed the maximum acceleration we add as much of the
+weighted second
+priority (vector 2) to the weighted highest priority vector as
+follows.
+
+Let
+$\vec{x}$ be the weighted highest priority vector and $\vec{y}$ the
+weighted second priority vector.  Set
+
+\begin{equation*}
+  \alpha = \frac{-2 (\vec{x} \cdot \vec{y}) + \sqrt{(2 \vec{x} \cdot
+      \vec{y})^2 + 4 (\vec{y}\cdot \vec{y}) (m^2 -
+      \vec{x}\cdot\vec{x})}}{2( \vec{y}\cdot\vec{y})}
+\end{equation*}
+where $m$ is the maximum acceleration and the dot product has the
+usual definition: $\vec{x}\cdot\vec{y} = \langle x_1,x_2,x_3 \rangle
+\cdot \langle y_1,y_2,y_3 \rangle = x_1y_1 + x_2y_2 + x_3y_3$.
+
+
+
+
+If $\alpha > 1$ set the current acceleration vector to $\vec{z} =
+\vec{x} + \vec{y}$ and continue by adding in the maximum amount of the
+weighted third priority in the same fashion.  If $\alpha \leq 1$ the
+acceleration is $\vec{z} = \vec{x} + \alpha \vec{y}$.
+
+
 \end{document}
