@@ -822,6 +822,9 @@ class GUI(tk.Frame):
             self.__widget_flock.from_config(data.flocks)
             self.__widget_behavior.from_config(data.behaviors)
 
+    def set_tick_wait(self,wait):
+        self.tick_wait=wait
+
     def set_tick_method(self,method):
         self.tick_method=method
 
@@ -842,6 +845,7 @@ class GUI(tk.Frame):
         tk.Frame.__init__(self, self.master)
         #self.config = Config()
         self.init_ui()
+        self.master.after(self.tick_wait, self.tick)
         self.master.mainloop()
 
     def init_ui(self):
