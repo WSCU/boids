@@ -7,8 +7,9 @@ import P3
 timer = Timer.Timer() #used for measuring elapsed time
 
 tick = 0.05
+#doodles
 
-F1 = Flock.Flock(60, P3.P3(-20, 0, 0), 20)
+F1 = Flock.Flock(30, P3.P3(-20, 0, 0), 20)
 
 F1_r = render.Render(F1)
 
