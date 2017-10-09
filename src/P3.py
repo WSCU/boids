@@ -36,6 +36,14 @@ class P3:
     def __str__(self):
         return '(' + str(self.x) + ', ' + str(self.y) + ', ' + str(self.z) + ')'
 
+    def to_dict(self):
+        return dict(x=self.x,y=self.y,z=self.z)
+
+    def from_dict(dict):
+        if dict == None:
+            return None
+        else:
+            return P3(x=dict['x'],y=dict['y'],z=dict['z'])
 
 if __name__ == "__main__":
     p1 = P3(1, 1, 1)
