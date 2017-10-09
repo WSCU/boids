@@ -107,13 +107,6 @@ def draw_bird(vertices):
     glEnd()
 
 
-    glBegin(GL_LINES)
-    for edge in edges:
-        for vertex in edge:
-            glColor3fv((1, 1, 1))
-            glVertex3fv(vertices[vertex])
-    glEnd()
-
 
 #call to create a new building
 class Buildings(object):
