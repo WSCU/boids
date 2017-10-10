@@ -804,11 +804,12 @@ class GUI(tk.Frame):
         return self.master
 
     def get_world_config(self):
+        screen = config.Config_Screen(self.world_x,self.world_y,self.sw,self.sh)
         data = config.Config_World(
             None,
             self.__widget_flock.to_config(),
             self.__widget_behavior.to_config(),
-            config.Config_Screen(self.world_x,self.world_y,self.sw,self.sh)
+            screen
         )
         return data
 
@@ -845,6 +846,7 @@ class GUI(tk.Frame):
         tk.Frame.__init__(self, self.master)
         #self.config = Config()
         self.init_ui()
+
         self.master.after(self.tick_wait, self.tick)
         self.master.mainloop()
 
@@ -921,6 +923,7 @@ class GUI(tk.Frame):
 
     def start_onclick(self,evt=None):
         value = self.get_world_config()
+        #self.world = world.World(value,self)
         return True
 
     def load_onclick(self,evt=None):
@@ -964,4 +967,4 @@ class GUI(tk.Frame):
 
 if __name__=='__main__':
     app = GUI()
-    app.start()
+    #app.start()

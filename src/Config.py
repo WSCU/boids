@@ -6,7 +6,7 @@ import src.P3
 class Config_World(object):
 
     def __init__(self,objects,flocks,behaviors,screen=None):
-        self.screen=screen,
+        self.screen=screen
         self.objects=objects
         self.flocks=flocks
         self.behaviors=behaviors
