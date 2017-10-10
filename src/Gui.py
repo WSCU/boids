@@ -840,7 +840,8 @@ class GUI(tk.Frame):
         self.master.resizable(0, 0)
         self.default_height = 120
 
-        self.tick_wait = world.World.tick
+        self.tick_wait = world.World.tick_time
+        self.tick_method = None
         self.file_path = None
 
         tk.Frame.__init__(self, self.master)
@@ -923,7 +924,7 @@ class GUI(tk.Frame):
 
     def start_onclick(self,evt=None):
         value = self.get_world_config()
-        #self.world = world.World(value,self)
+        self.world = world.World(value,self)
         return True
 
     def load_onclick(self,evt=None):
