@@ -3,7 +3,7 @@ import render
 import Timer
 import time
 import P3
-import src.Config as config
+import Config
 
 class World:
 
@@ -11,14 +11,14 @@ class World:
     tick_step = 0.05
 
     def __init__ (self,settings, gui):
-        if isinstance(settings, config.Config_World):
+        if isinstance(settings, Config.Config_World):
             self.settings = settings
             flock = settings.flocks[0]
-            if isinstance(flock,config.Config_Flock):
+            if isinstance(flock,Config.Config_Flock):
                 F1 = Flock.Flock(flock.count,flock.center,flock.radius)
         self.gui = gui
 
-        if isinstance(settings.screen, config.Config_Screen):
+        if isinstance(settings.screen, Config.Config_Screen):
             render.start(0,self.settings.screen.y_pos, self.settings.screen.x_size, self.settings.screen.y_size,1000)
 
 

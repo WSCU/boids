@@ -1,13 +1,13 @@
 
-import src.Config as config
-import src.World as world
+import Config as config
+import World as world
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import asksaveasfilename
 import json
-
-from src.P3 import P3
+import P3
+import platform
 
 color_frame_background = 'lightgray'
 color_confirm = 'lightgreen'
@@ -106,7 +106,7 @@ class _Widget_Flock(_Gui_Widget):
         return P3(self.get_flock_center_x(),self.get_flock_center_y(),self.get_flock_center_z())
 
     def set_flock_center(self,value):
-        if isinstance(value,P3):
+        if isinstance(value,P3.P3):
             self.set_flock_center_x(value.x)
             self.set_flock_center_y(value.y)
             self.set_flock_center_z(value.z)
@@ -800,6 +800,13 @@ class _Widget_Commands(_Gui_Widget):
 
 class GUI(tk.Frame):
 
+    def get_os_title_height(self):
+        p = platform.system()
+        if str(p).upper() == 'WINDOWS':
+            return 30
+        else:
+            return 20
+
     def get_master(self):
         return self.master
 
@@ -864,7 +871,7 @@ class GUI(tk.Frame):
         self.app_frame.pack()
 
         self.sw = self.master.winfo_screenwidth()
-        self.sh = self.master.winfo_screenheight()-(self.default_height + 90)
+        self.sh = self.master.winfo_screenheight()-(self.default_height + self.get_os_title_height()*2+30)
         self.ui_x = -7
         self.ui_y = 0
         self.world_x=self.ui_x

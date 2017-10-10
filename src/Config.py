@@ -1,6 +1,6 @@
 
 import json
-import src.P3
+import P3
 
 
 class Config_World(object):
@@ -102,7 +102,7 @@ class Config_Flock(object):
         value.count=dict['count']
         value.behavior_id = dict['behavior_id']
 
-        value.center = src.P3.P3.from_dict(dict['center'])
+        value.center = P3.P3.from_dict(dict['center'])
         value.radius = dict['radius']
 
         return value

@@ -1,10 +1,10 @@
-import src.Gui
+import Gui
 
 class Application:
 
     def __init__(self):
         self.data=None
-        self.gui=src.Gui.GUI()
+        self.gui=Gui.GUI()
         self.is_visible=True
         self.data = self.gui.start(self.on_tick,1500)
 
