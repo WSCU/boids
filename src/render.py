@@ -8,10 +8,9 @@ import random
 import Flock
 import Boid
 import P3
+import os
 
-x = 800
-y = 600
-z = 1000
+
 
 
 
@@ -46,7 +45,8 @@ building_vertices = (
     )
 
 #call to create display
-def start(width, hieght, depth):
+def start(x, y, width, hieght, depth):
+    os.environ['SDL_VIDEO_WINDOW_POS'] = str(x) + "," + str(y)
     pygame.init()
     display = (width, hieght)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
