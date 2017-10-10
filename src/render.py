@@ -3,6 +3,7 @@ from pygame import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
+import os
 
 import random
 import Flock
@@ -46,7 +47,8 @@ building_vertices = (
     )
 
 #call to create display
-def start(width, hieght, depth):
+def start(x, y, width, hieght, depth):
+    os.environ['SDL_VIDEO_WINDOW_POS'] = str(x) + "," + str(y)
     pygame.init()
     display = (width, hieght)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)

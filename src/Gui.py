@@ -864,11 +864,11 @@ class GUI(tk.Frame):
         self.app_frame.pack()
 
         self.sw = self.master.winfo_screenwidth()
-        self.sh = self.master.winfo_screenheight()-self.default_height
+        self.sh = self.master.winfo_screenheight()-(self.default_height + 90)
         self.ui_x = -7
         self.ui_y = 0
         self.world_x=self.ui_x
-        self.world_y=self.ui_y+self.default_height
+        self.world_y=self.ui_y+self.default_height+60
 
         #self.config.set_size((sw, sh-self.default_height))
 
