@@ -13,6 +13,9 @@ import P3
 x_move = 0
 y_move = 0
 z_move = 0
+rotate_x = 0
+rotate_y = 0
+rotate_z = 0
 
 bird_vertices = (
             (0, 0, 0),
@@ -209,6 +212,9 @@ class Render:
         global x_move
         global y_move
         global z_move
+        global rotate_x
+        global rotate_y
+        global rotate_z
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -226,13 +232,32 @@ class Render:
                     z_move = 10
                 if event.key == K_x:
                     z_move = -10
+                if event.key == K_a:
+                    rotate_x = 10
+                if event.key == K_d:
+                    rotate_x = -10
+                if event.key == K_w:
+                    rotate_y = 10
+                if event.key == K_s:
+                    rotate_y = -10
+                if event.key == K_q:
+                    rotate_z = 10
+                if event.key == K_e:
+                    rotate_z = -10
             if event.type == pygame.KEYUP:
                 x_move = 0
                 y_move = 0
                 z_move = 0
+                rotate_x = 0
+                rotate_y = 0
+                rotate_z = 0
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glTranslate(x_move, y_move, z_move)
+        glRotatef(rotate_x, 1.0, 0.0, 0.0)
+        glRotatef(rotate_y, 0.0, 1.0, 0.0)
+        glRotatef(rotate_z, 0.0, 0.0, 1.0)
+        #glRotatef(rotate, 0.0)
         ground()
 
         for building in Buildings.registry:
