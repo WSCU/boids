@@ -10,9 +10,6 @@ import Flock
 import Boid
 import P3
 
-
-
-
 bird_vertices = (
             (0, 0, 0),
             (0, 1, .25),
@@ -42,6 +39,7 @@ building_vertices = (
     (1,1,-1),#6
     (0,1,-1)#7
     )
+
 
 #call to create display
 def start(x, y, width, hieght, depth):
@@ -235,7 +233,7 @@ if __name__ == "__main__":
     for num in range(10):
         Buildings(random.randrange(-100, 100), random.randrange(-100, 100), random.randrange(1, 10), random.randrange(1, 10), random.randrange(1, 10), (random.randrange(0,2), random.randrange(0,2), random.randrange(0,2)))
 
-    start(800, 600, 1000)
+    start(0, 0, 800, 600, 1000)
 
 
     while 1:
