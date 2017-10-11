@@ -67,14 +67,25 @@ class Config_Screen(object):
 
 class Config_Static_Object(object):
 
-    def __init__(self, id):
+    def __init__(self, id, x = 0, y = 0, height = 0, width = 0):
         self.id=id
+        self.x=x
+        self.y=y
+        self.height=height
+        self.width=width
 
     def to_dict(self):
-        return None
+        return dict(id=self.id,x=self.x,y=self.y,height=self.height,width=self.width)
 
     def from_dict(dict):
-        return None
+        if dict!=None:
+            return Config_Static_Object(
+                dict['id'],
+                dict['x'],
+                dict['y'],
+                dict['height'],
+                dict['width']
+            )
 
 class Config_Flock(object):
 
