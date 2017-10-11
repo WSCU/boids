@@ -10,9 +10,6 @@ import Flock
 import Boid
 import P3
 
-x = 800
-y = 600
-z = 1000
 
 
 
