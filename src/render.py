@@ -10,6 +10,10 @@ import Flock
 import Boid
 import P3
 
+x_move = 0
+y_move = 0
+z_move = 0
+
 bird_vertices = (
             (0, 0, 0),
             (0, 1, .25),
@@ -196,18 +200,39 @@ class Buildings(object):
 
 #call to create new flock
 class Render:
+
     def __init__(self, flock):
         self.flock = flock
 
     #draws objects on screen (call each tick of the clock)
     def draw(self):
+        global x_move
+        global y_move
+        global z_move
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == K_LEFT:
+                    x_move = 10
+                if event.key == K_RIGHT:
+                    x_move = -10
+                if event.key == K_UP:
+                    y_move = -10
+                if event.key == K_DOWN:
+                    y_move = 10
+                if event.key == K_z:
+                    z_move = 10
+                if event.key == K_x:
+                    z_move = -10
+            if event.type == pygame.KEYUP:
+                x_move = 0
+                y_move = 0
+                z_move = 0
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
+        glTranslate(x_move, y_move, z_move)
         ground()
 
         for building in Buildings.registry:
