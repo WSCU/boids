@@ -3,6 +3,7 @@ from pygame import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
+import os
 
 import random
 import Flock
@@ -46,7 +47,8 @@ building_vertices = (
     )
 
 #call to create display
-def start(width, hieght, depth):
+def start(x, y, width, hieght, depth):
+    os.environ['SDL_VIDEO_WINDOW_POS'] = str(x) + "," + str(y)
     pygame.init()
     display = (width, hieght)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
@@ -107,20 +109,13 @@ def draw_bird(vertices):
     glEnd()
 
 
-    glBegin(GL_LINES)
-    for edge in edges:
-        for vertex in edge:
-            glColor3fv((1, 1, 1))
-            glVertex3fv(vertices[vertex])
-    glEnd()
-
 
 #call to create a new building
 class Buildings(object):
-    _registry = []
+    registry = []
 
     def __init__(self, x, y, width, height, depth, color):
-        self._registry.append(self)
+        self.registry.append(self)
         self.x = x
         self.y = y
         self.width = width
@@ -134,22 +129,8 @@ class Buildings(object):
         final_vertices = []
         global building_count
 
-        #positoning
-        for vert in building_vertices:
-            new_vert = []
-
-            new_x = vert[0] + self.x
-            new_y = vert[1] + self.y
-            new_z = vert[2]
-
-            new_vert.append(new_x)
-            new_vert.append(new_y)
-            new_vert.append(new_z)
-
-            new_vertices.append(new_vert)
-
         #scaling
-        for nvert in new_vertices:
+        for nvert in building_vertices:
             fnew_vert = []
 
             newv_x = nvert[0] * self.width
@@ -160,7 +141,21 @@ class Buildings(object):
             fnew_vert.append(newv_y)
             fnew_vert.append(newv_z)
 
-            final_vertices.append(fnew_vert)
+            new_vertices.append(fnew_vert)
+
+        #positoning
+        for vert in new_vertices:
+            new_vert = []
+
+            new_x = vert[0] + self.x
+            new_y = vert[1] + self.y
+            new_z = vert[2]
+
+            new_vert.append(new_x)
+            new_vert.append(new_y)
+            new_vert.append(new_z)
+
+            final_vertices.append(new_vert)
 
         return final_vertices
 
@@ -220,7 +215,7 @@ class Render:
 
         ground()
 
-        for building in Buildings._registry:
+        for building in Buildings.registry:
             Buildings.draw_building(building)
 
         for b in self.flock.boids:
@@ -237,11 +232,11 @@ class Render:
 
 
 if __name__ == "__main__":
-    flock = Flock.Flock(20, P3.P3(-75, -75, 0), 10)
+    flock = Flock.Flock(100, P3.P3(-75, -75, 0), 10)
     f = Render(flock)
 
     for num in range(10):
-        Buildings(random.randrange(-10, 10), random.randrange(-10, 10), random.randrange(1, 10), random.randrange(1, 10), random.randrange(1, 10), (random.randrange(0,2), random.randrange(0,2), random.randrange(0,2)))
+        Buildings(random.randrange(-100, 100), random.randrange(-100, 100), random.randrange(1, 10), random.randrange(1, 10), random.randrange(1, 10), (random.randrange(0,2), random.randrange(0,2), random.randrange(0,2)))
 
     start(800, 600, 1000)
 

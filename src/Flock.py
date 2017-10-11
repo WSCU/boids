@@ -34,6 +34,12 @@ class Flock:
         for i in range(len(self.boids)):
             for j in range(len(self.boids) - i - 1):
                 self.distance_matrix[i][j] = self.boids[i].position.distance(self.boids[j].position)
+                
+    def get_distance(self, i, j):
+        if i > j:
+            return self.distance_matrix[i][j]
+        else:
+            return self.distance_matrix[j][i]
 
 
 if __name__ == '__main__':

@@ -1,0 +1,1 @@
+{"objects": [], "flocks": [{"id": 0, "boids": null, "count": 30, "behavior_id": null, "center": {"x": 0.0, "y": 0.0, "z": 0.0}, "radius": 25.0}], "behaviors": [{"id": 0, "neighbor_weight": 5.0, "center_weight": "5\n", "direction_weight": "5\n"}]}

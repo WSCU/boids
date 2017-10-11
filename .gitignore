@@ -108,3 +108,11 @@ ENV/
 .idea/misc.xml
 *.iml
 .idea/workspace.xml
+
+# latex files
+*.log
+*.aux
+*.ltx~
+.idea/workspace.xml
+.idea/workspace.xml
+.idea/workspace.xml

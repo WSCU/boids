@@ -12,4 +12,4 @@ class Timer:
         end = time.time()
         s = end - self.start
         time_str = "%02d" % s
-        return time_str
+        return s
