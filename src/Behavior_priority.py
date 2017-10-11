@@ -1,12 +1,12 @@
 import P3
 
-
 def behavior(boid):
     max_acc = .1
     max_vel = 25
     r = 200
     nby = [other for other in boid.flock.boids if boid.id > other.id and boid.flock.distance_matrix[boid.id][other.id] <
            r or other.id > boid.id and boid.flock.distance_matrix[other.id][boid.id] < r]
+
     # collision avoidance
     r2 = 50
     avoid = [other for other in nby if boid.id > other.id and boid.flock.distance_matrix[boid.id][other.id] < r2
@@ -42,3 +42,43 @@ def behavior(boid):
     acc = P3.P3.normalize(delta_vel) * max_acc
 
     return acc if acc.distance() < delta_vel.distance() else delta_vel
+
+# PRIORITY VECTORS, DESIRES:
+
+def priority_behavior(boid):
+    #max_acc = .1
+    #max_vel = 25
+    #r = 200
+    #nby = [other for other in boid.flock.boids if boid.id > other.id and boid.flock.distance_matrix[boid.id][other.id] <
+           #r or other.id > boid.id and boid.flock.distance_matrix[other.id][boid.id] < r]
+
+    # Vector 1: Desire to be in middle of flock. As pv1
+    # the difference between the mean position of the boids local neighbors
+    # and the boids current position
+    boidsp_sum = 0
+    for x in nby: #?
+        boidsp_sum += x
+    mean_position = boidsp_sum / len(nby)
+    pv1 = P3.P3(0, 0, 0)
+    for x in nby: #?
+        v1 = mean_position - boid.position
+
+    # Vector 2: Desire to fly in same direction. As pv2
+    # the difference between the mean velocity of the boids local neighbors
+    # and the boids current velocity
+    sum_vel = 0
+    for x in nby:
+        sum_vel += x.velocity
+    mean_velocities = sum_vel/len(nby)
+    pv2 = mean_velocities - boid.position
+
+    # Vector 3: Obstacle avoidance. As pv3
+    # a weighted sum of differences between close neighbors’ positions
+    # and boids current position as well as differences from stationary objects
+    diff_boids
+    for x in nby:
+        diff_boids = x - boid.position
+    pv3 = 0
+
+
+# END OF PRIORITY VECTORS
