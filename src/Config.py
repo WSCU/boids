@@ -78,7 +78,7 @@ class Config_Static_Object(object):
 
 class Config_Flock(object):
 
-    def __init__(self, id, boids = None, count = None, behavior_id = None, center = None, radius = None):
+    def __init__(self, id, boids = None, count = 0, behavior_id = 0, center = P3.P3(0,0,0), radius = 0):
         self.id = id
         self.boids = boids
         self.count = count
