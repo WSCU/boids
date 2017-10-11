@@ -103,7 +103,8 @@ class _Widget_Flock(_Gui_Widget):
             self.is_flock_center_enabled = is_enabled
 
     def get_flock_center(self):
-        return P3(self.get_flock_center_x(),self.get_flock_center_y(),self.get_flock_center_z())
+        value = P3.P3(self.get_flock_center_x(),self.get_flock_center_y(),self.get_flock_center_z())
+        return value
 
     def set_flock_center(self,value):
         if isinstance(value,P3.P3):
@@ -116,7 +117,8 @@ class _Widget_Flock(_Gui_Widget):
             self.set_flock_center_z(0)
 
     def get_flock_center_x(self):
-        return float(self.text_flock_center_x.get(1.0,tk.END))
+        value = float(self.text_flock_center_x.get(1.0,tk.END))
+        return value
 
     def set_flock_center_x(self,value):
         if isinstance(self.text_flock_center_x, tk.Text):
@@ -132,7 +134,8 @@ class _Widget_Flock(_Gui_Widget):
             self.selected_value.center=self.get_flock_center()
 
     def get_flock_center_y(self):
-        return float(self.text_flock_center_y.get(1.0,tk.END))
+        value = float(self.text_flock_center_y.get(1.0,tk.END))
+        return value
 
     def set_flock_center_y(self,value):
         if isinstance(self.text_flock_center_y, tk.Text):
@@ -148,7 +151,8 @@ class _Widget_Flock(_Gui_Widget):
             self.selected_value.center=self.get_flock_center()
 
     def get_flock_center_z(self):
-        return float(self.text_flock_center_z.get(1.0,tk.END))
+        value = float(self.text_flock_center_z.get(1.0,tk.END))
+        return value
 
     def set_flock_center_z(self,value):
         if isinstance(self.text_flock_center_z,tk.Text):
