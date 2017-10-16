@@ -14,11 +14,12 @@ building_vertices = (
 #call to create a new building
 class Buildings(object):
     registry = []
-
-    def __init__(self, x, y, width, height, depth, color):
+    #please note that position will be a P3.P3
+    def __init__(self, position, width, height, depth, color):
         self.registry.append(self)
-        self.x = x
-        self.y = y
+        self.x = position.x
+        self.y = position.y
+        self.z = position.z
         self.width = width
         self.height = height
         self.depth = depth
