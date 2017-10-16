@@ -22,16 +22,13 @@ class P3:
     def __sub__(self, other):
         return P3(self.x - other.x, self.y - other.y, self.z - other.z)
 
-    def distance(self, other=None):
+    def distance(self, other=None):  # returns magnitude if one argument is given
         other = other if other is not None else P3(0, 0, 0)
         return math.sqrt((self.x+other.x)**2 + (self.y+other.y)**2 + (self.z+other.z)**2)
 
     def normalize(self):
         magnitude = self.distance() if self.distance() != 0 else 1
         return P3(self.x/magnitude, self.y/magnitude, self.z/magnitude)
-    
-    def magnitude(self):
-        return math.sqrt(math.pow(self.x, 2)+ math.pow(self.y, 2) + math.pow(self.z, 2))
 
     def __str__(self):
         return '(' + str(self.x) + ', ' + str(self.y) + ', ' + str(self.z) + ')'
@@ -39,11 +36,9 @@ class P3:
     def to_dict(self):
         return dict(x=self.x,y=self.y,z=self.z)
 
-    def from_dict(dict):
-        if dict == None:
-            return None
-        else:
-            return P3(x=dict['x'],y=dict['y'],z=dict['z'])
+    def from_dict(self, dict):
+        return None if dict is None else P3(x=dict['x'], y=dict['y'], z=dict['z'])
+
 
 if __name__ == "__main__":
     p1 = P3(1, 1, 1)
@@ -58,5 +53,3 @@ if __name__ == "__main__":
     print(p2 - p1)
     p3 = P3(-100, 100, -100)
     print(p3 - p1)
-
-
