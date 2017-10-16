@@ -102,17 +102,44 @@ def draw_bird(vertices):
     glEnd()
 
 
-
-
-
-
-
 #call to create new flock
 class Render:
 
     def __init__(self, flock):
         self.flock = flock
 
+    @staticmethod
+    def move_camera(event):
+        global x_move
+        global y_move
+        global z_move
+        global rotate_x
+        global rotate_y
+        global rotate_z
+        if event.key == K_LEFT:
+            x_move = 10
+        if event.key == K_RIGHT:
+            x_move = -10
+        if event.key == K_UP:
+            y_move = -10
+        if event.key == K_DOWN:
+            y_move = 10
+        if event.key == K_z:
+            z_move = 10
+        if event.key == K_x:
+            z_move = -10
+        if event.key == K_a:
+            rotate_x = 10
+        if event.key == K_d:
+            rotate_x = -10
+        if event.key == K_w:
+            rotate_y = 10
+        if event.key == K_s:
+            rotate_y = -10
+        if event.key == K_q:
+            rotate_z = 10
+        if event.key == K_e:
+            rotate_z = -10
     #draws objects on screen (call each tick of the clock)
     def draw(self):
         global x_move
@@ -126,30 +153,7 @@ class Render:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == K_LEFT:
-                    x_move = 10
-                if event.key == K_RIGHT:
-                    x_move = -10
-                if event.key == K_UP:
-                    y_move = -10
-                if event.key == K_DOWN:
-                    y_move = 10
-                if event.key == K_z:
-                    z_move = 10
-                if event.key == K_x:
-                    z_move = -10
-                if event.key == K_a:
-                    rotate_x = 10
-                if event.key == K_d:
-                    rotate_x = -10
-                if event.key == K_w:
-                    rotate_y = 10
-                if event.key == K_s:
-                    rotate_y = -10
-                if event.key == K_q:
-                    rotate_z = 10
-                if event.key == K_e:
-                    rotate_z = -10
+                Render.move_camera(event)
             if event.type == pygame.KEYUP:
                 x_move = 0
                 y_move = 0
@@ -157,6 +161,8 @@ class Render:
                 rotate_x = 0
                 rotate_y = 0
                 rotate_z = 0
+                if event.type == K_UP or event.type == K_DOWN:
+                    Render.move_camera(event)
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glTranslate(x_move, y_move, z_move)
@@ -166,8 +172,8 @@ class Render:
         #glRotatef(rotate, 0.0)
         ground()
 
-        for building in Buildings.registry:
-            Buildings.draw_building(building)
+        for building in Buildings.Buildings.registry:
+            Buildings.Buildings.draw_building(building)
 
         for b in self.flock.boids:
             v = make_bird_vertices(b)

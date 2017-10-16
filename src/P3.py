@@ -36,7 +36,7 @@ class P3:
     def to_dict(self):
         return dict(x=self.x,y=self.y,z=self.z)
 
-    def from_dict(self, dict):
+    def from_dict(dict):
         return None if dict is None else P3(x=dict['x'], y=dict['y'], z=dict['z'])
 
 
