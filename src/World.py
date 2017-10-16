@@ -26,9 +26,8 @@ class World:
 
         #F1 = Flock.Flock(10, P3.P3(-20, 0, 0), 20)
         self.render = render.Render(F1)
-        Buildings.Buildings(50,50,10,100,10,(1,0,1))
-        Buildings.Buildings(50, 10, 20, 100, 10, (1, 0, 0))
-        Buildings.Buildings(25, -50, 5, 50, 20, (0, 0, 1))
+        Buildings.Buildings(P3.P3(0, 0, 0), 10, 100, 10, (1, 0, 1))
+
 
         """
 
