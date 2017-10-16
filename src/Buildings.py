@@ -15,14 +15,17 @@ building_vertices = (
 class Buildings(object):
     registry = []
 
-    def __init__(self, x, y, width, height, depth, color):
+    #please note that position will be a P3.P3
+    def __init__(self, position, width, height, depth, color):
         self.registry.append(self)
-        self.x = x
-        self.y = y
+        self.x = position.x
+        self.y = position.y
+        self.z = position.z
         self.width = width
         self.height = height
         self.depth = depth
         self.color = color
+        
         
     def forceField(self, boidPosition, registry): # A method to find a building's force pushing on a given boid's position(P3) # this should always follow the registry location
         sum = P3.P3(0,0,0)
@@ -39,10 +42,12 @@ class Buildings(object):
         return sum * (1/len(registry))
 		
     # sets building verts (render use only)
+
     def set_building(self):
         new_vertices = []
         final_vertices = []
         global building_count
+
 
         # scaling
         for nvert in building_vertices:
@@ -57,7 +62,7 @@ class Buildings(object):
             fnew_vert.append(newv_z)
 
             new_vertices.append(fnew_vert)
-
+       
         # positoning
         for vert in new_vertices:
             new_vert = []
@@ -75,35 +80,35 @@ class Buildings(object):
         return final_vertices
 
 
-    # displays buildings (render use only)
-    def draw_building(build):
+    #displays buildings (render use only)
+    def draw_building(self):
         edges = (
-            (0, 1),
-            (0, 4),
-            (1, 2),
-            (1, 5),
-            (2, 3),
-            (2, 6),
-            (3, 0),
-            (3, 7),
-            (4, 5),
-            (5, 6),
-            (6, 7),
-            (7, 4)
+        (0, 1),
+        (0, 4),
+        (1, 2),
+        (1, 5),
+        (2, 3),
+        (2, 6),
+        (3, 0),
+        (3, 7),
+        (4, 5),
+        (5, 6),
+        (6, 7),
+        (7, 4)
         )
         surfaces = (
-            (0, 1, 2, 3),
-            (2, 6, 5, 1),
-            (0, 1, 4, 5),
-            (0, 3, 7, 4),
-            (3, 7, 6, 2),
-            (7, 4, 5, 6)
+            (0,1,2,3),
+            (2,6,5,1),
+            (0,1,4,5),
+            (0,3,7,4),
+            (3,7,6,2),
+            (7,4,5,6)
         )
-        vertices = Buildings.set_building(build)
+        vertices = Buildings.set_building(self)
         glBegin(GL_QUADS)
         for surface in surfaces:
             for vertex in surface:
-                glColor3fv(build.color)
+                glColor3fv(self.color)
                 glVertex3fv(vertices[vertex])
         glEnd()
 

@@ -38,6 +38,7 @@ ground_edges = (
     (2, 0)
 )
 
+
 #call to create display
 def start(x, y, width, hieght, depth):
     os.environ['SDL_VIDEO_WINDOW_POS'] = str(x) + "," + str(y)
@@ -99,7 +100,6 @@ def draw_bird(vertices):
             glColor3fv((1,1,1))
             glVertex3fv(vertices[vertex])
     glEnd()
-
 
 
 #call to create new flock
@@ -191,10 +191,6 @@ class Render:
 if __name__ == "__main__":
     flock = Flock.Flock(100, P3.P3(-75, -75, 0), 10)
     f = Render(flock)
-
-    for num in range(10):
-        Buildings(random.randrange(-100, 100), random.randrange(-100, 100), random.randrange(1, 10), random.randrange(1, 10), random.randrange(1, 10), (random.randrange(0,2), random.randrange(0,2), random.randrange(0,2)))
-
     start(0, 0, 800, 600, 1000)
 
 
