@@ -11,6 +11,7 @@ class World:
     tick_time = 10
     tick_step = 0.05
 
+
     def __init__ (self,settings, gui):
         if isinstance(settings, Config.Config_World):
             self.settings = settings
@@ -20,9 +21,7 @@ class World:
         self.gui = gui
 
         if isinstance(settings.screen, Config.Config_Screen):
-            render.start(0,self.settings.screen.y_pos, self.settings.screen.x_size, self.settings.screen.y_size,1000)
-
-
+            render.start(self.settings.screen.x_pos, self.settings.screen.y_pos, self.settings.screen.y_size, 1000)
 
         #F1 = Flock.Flock(10, P3.P3(-20, 0, 0), 20)
         self.render = render.Render(F1)
@@ -50,9 +49,13 @@ class World:
         self.drawFlocks()
         return True
 
+    def key_press(self, event):
+        self.render.key_press(event)
+
 """
     timer = Timer.Timer() #used for measuring elapsed time
 
     timer.restart()
 """
+
 
