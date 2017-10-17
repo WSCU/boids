@@ -5,11 +5,14 @@ import time
 import P3
 import Config
 import Buildings
+import random
 
 class World:
 
     tick_time = 10
     tick_step = 0.05
+    x_location = -200
+    y_location = 100
 
     def __init__ (self,settings, gui):
         if isinstance(settings, Config.Config_World):
@@ -22,25 +25,46 @@ class World:
         if isinstance(settings.screen, Config.Config_Screen):
             render.start(0,self.settings.screen.y_pos, self.settings.screen.x_size, self.settings.screen.y_size,1000)
 
-
-
-        #F1 = Flock.Flock(10, P3.P3(-20, 0, 0), 20)
         self.render = render.Render(F1)
-        Buildings.Buildings(50,50,10,100,10,(1,0,1))
-        Buildings.Buildings(50, 10, 20, 100, 10, (1, 0, 0))
-        Buildings.Buildings(25, -50, 5, 50, 20, (0, 0, 1))
 
-        """
+        #creating city blocks
+        for b in range (2):
+            self.x_location += 150
+            self.y_location = 100
 
-        for num in range(10):
-            render.Buildings(render.random.randrange(-10, 10), render.random.randrange(-10, 10),
-                             render.random.randrange(1, 10), render.random.randrange(1, 10),
-                             render.random.randrange(1, 10), (
-                             render.random.randrange(0, 2), render.random.randrange(0, 2),
-                             render.random.randrange(0, 2)))
-        """
+            for z in range(4):
+                self.y_location -= 20
+                #self.x_location += 20
+
+                for i in range(3):
+                    self.y_location -= 10
+                    self.x_location -= 30
+                    self.c = random.randint(0,1)
+
+                    for t in range(3):
+                        self.c2 = random.randint(0,1)
+                        Buildings.Buildings(self.x_location, self.y_location, 10, random.randrange(20,65), 10, (self.c, 0, self.c2))
+                        self.x_location += 10
+
+
 
         gui.set_tick_method(self.tick)
+    def key_left(self):
+        self.render.key_left()
+        return
+    def key_right(self):
+        self.render.key_right()
+        return
+    def key_up(self):
+        self.render.key_up()
+        return
+    def key_down(self):
+        self.render.key_down()
+        return
+    def key_zoom_in(self):
+        return
+    def key_zoom_out(self):
+        return
 
     def drawFlocks(self):
         self.render.draw()

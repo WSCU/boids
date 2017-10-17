@@ -36,7 +36,7 @@ class Buildings(object):
 
             newv_x = nvert[0] * self.width
             newv_y = nvert[1] * self.depth
-            newv_z = nvert[2] * self.height
+            newv_z = nvert[2] * -self.height
 
             fnew_vert.append(newv_x)
             fnew_vert.append(newv_y)
