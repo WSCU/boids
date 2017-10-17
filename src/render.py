@@ -5,11 +5,12 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 import os
 
-import Buildings
+import Building
 import random
 import Flock
 import Boid
 import P3
+import World
 
 x_move = 0
 y_move = 0
@@ -172,8 +173,8 @@ class Render:
         #glRotatef(rotate, 0.0)
         ground()
 
-        for building in Buildings.Buildings.registry:
-            Buildings.Buildings.draw_building(building)
+        for building in World.buildings:
+            Building.Building.draw_building(building)
 
         for b in self.flock.boids:
             v = make_bird_vertices(b)

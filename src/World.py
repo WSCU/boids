@@ -4,12 +4,15 @@ import Timer
 import time
 import P3
 import Config
-import Buildings
+import Building
 
+
+buildings = []
 class World:
 
     tick_time = 10
     tick_step = 0.05
+
 
     def __init__ (self,settings, gui):
         if isinstance(settings, Config.Config_World):
@@ -26,9 +29,12 @@ class World:
 
         #F1 = Flock.Flock(10, P3.P3(-20, 0, 0), 20)
         self.render = render.Render(F1)
-        Buildings.Buildings(50,50,10,100,10,(1,0,1))
-        Buildings.Buildings(50, 10, 20, 100, 10, (1, 0, 0))
-        Buildings.Buildings(25, -50, 5, 50, 20, (0, 0, 1))
+
+
+        b1 = Building.Building(P3.P3(-50,-50,0),10,100,10,(1,0,1))
+        b2 = Building.Building(P3.P3(0,-50,0),10,100,10,(1,1,.5))
+        b3 = Building.Building(P3.P3(50,-50,0),10,100,10,(1,.5,1))
+        buildings.extend([b1,b2,b3])
 
         """
 

@@ -1,4 +1,5 @@
 from OpenGL.GL import *
+import P3
 
 building_vertices = (
     (0,0,0),#0
@@ -12,12 +13,10 @@ building_vertices = (
     )
 
 #call to create a new building
-class Buildings(object):
-    registry = []
+class Building(object):
 
     #please note that position will be a P3.P3
     def __init__(self, position, width, height, depth, color):
-        self.registry.append(self)
         self.x = position.x
         self.y = position.y
         self.z = position.z
@@ -104,7 +103,7 @@ class Buildings(object):
             (3,7,6,2),
             (7,4,5,6)
         )
-        vertices = Buildings.set_building(self)
+        vertices = Building.set_building(self)
         glBegin(GL_QUADS)
         for surface in surfaces:
             for vertex in surface:
