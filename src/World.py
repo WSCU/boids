@@ -4,6 +4,7 @@ import Timer
 import time
 import P3
 import Config
+import Buildings
 
 class World:
 
@@ -22,8 +23,13 @@ class World:
             render.start(0,self.settings.screen.y_pos, self.settings.screen.x_size, self.settings.screen.y_size,1000)
 
 
+
         #F1 = Flock.Flock(10, P3.P3(-20, 0, 0), 20)
         self.render = render.Render(F1)
+        Buildings.Buildings(P3.P3(0, 0, 0), 10, 100, 10, (1, 0, 1))
+
+
+        """
 
         for num in range(10):
             render.Buildings(render.random.randrange(-10, 10), render.random.randrange(-10, 10),
@@ -31,6 +37,7 @@ class World:
                              render.random.randrange(1, 10), (
                              render.random.randrange(0, 2), render.random.randrange(0, 2),
                              render.random.randrange(0, 2)))
+        """
 
         gui.set_tick_method(self.tick)
 

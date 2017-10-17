@@ -5,6 +5,7 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 import os
 
+import Buildings
 import random
 import Flock
 import Boid
@@ -36,16 +37,6 @@ ground_edges = (
     (3, 2),
     (2, 0)
 )
-building_vertices = (
-    (0,0,0),#0
-    (1,0,0),#1
-    (1,0,-1),#2
-    (0,0,-1),#3
-    (0,1,0),#4
-    (1,1,0),#5
-    (1,1,-1),#6
-    (0,1,-1)#7
-    )
 
 
 #call to create display
@@ -111,102 +102,44 @@ def draw_bird(vertices):
     glEnd()
 
 
-
-#call to create a new building
-class Buildings(object):
-    registry = []
-
-    def __init__(self, x, y, width, height, depth, color):
-        self.registry.append(self)
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.depth = depth
-        self.color = color
-
-    #sets building verts (render use only)
-    def set_building(self):
-        new_vertices = []
-        final_vertices = []
-        global building_count
-
-        #scaling
-        for nvert in building_vertices:
-            fnew_vert = []
-
-            newv_x = nvert[0] * self.width
-            newv_y = nvert[1] * self.depth
-            newv_z = nvert[2] * self.height
-
-            fnew_vert.append(newv_x)
-            fnew_vert.append(newv_y)
-            fnew_vert.append(newv_z)
-
-            new_vertices.append(fnew_vert)
-
-        #positoning
-        for vert in new_vertices:
-            new_vert = []
-
-            new_x = vert[0] + self.x
-            new_y = vert[1] + self.y
-            new_z = vert[2]
-
-            new_vert.append(new_x)
-            new_vert.append(new_y)
-            new_vert.append(new_z)
-
-            final_vertices.append(new_vert)
-
-        return final_vertices
-
-    #displays buildings (render use only)
-    def draw_building(self):
-        edges = (
-        (0, 1),
-        (0, 4),
-        (1, 2),
-        (1, 5),
-        (2, 3),
-        (2, 6),
-        (3, 0),
-        (3, 7),
-        (4, 5),
-        (5, 6),
-        (6, 7),
-        (7, 4)
-        )
-        surfaces = (
-            (0,1,2,3),
-            (2,6,5,1),
-            (0,1,4,5),
-            (0,3,7,4),
-            (3,7,6,2),
-            (7,4,5,6)
-        )
-        vertices = Buildings.set_building(self)
-        glBegin(GL_QUADS)
-        for surface in surfaces:
-            for vertex in surface:
-                glColor3fv(self.color)
-                glVertex3fv(vertices[vertex])
-        glEnd()
-
-
-        glBegin(GL_LINES)
-        for edge in edges:
-            for vertex in edge:
-                glColor3fv((1, 1, 1))
-                glVertex3fv(vertices[vertex])
-        glEnd()
-
 #call to create new flock
 class Render:
 
     def __init__(self, flock):
         self.flock = flock
 
+    @staticmethod
+    def move_camera(event):
+        global x_move
+        global y_move
+        global z_move
+        global rotate_x
+        global rotate_y
+        global rotate_z
+        if event.key == K_LEFT:
+            x_move = 10
+        if event.key == K_RIGHT:
+            x_move = -10
+        if event.key == K_UP:
+            y_move = -10
+        if event.key == K_DOWN:
+            y_move = 10
+        if event.key == K_z:
+            z_move = 10
+        if event.key == K_x:
+            z_move = -10
+        if event.key == K_a:
+            rotate_x = 10
+        if event.key == K_d:
+            rotate_x = -10
+        if event.key == K_w:
+            rotate_y = 10
+        if event.key == K_s:
+            rotate_y = -10
+        if event.key == K_q:
+            rotate_z = 10
+        if event.key == K_e:
+            rotate_z = -10
     #draws objects on screen (call each tick of the clock)
     def draw(self):
         global x_move
@@ -220,30 +153,7 @@ class Render:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == K_LEFT:
-                    x_move = 10
-                if event.key == K_RIGHT:
-                    x_move = -10
-                if event.key == K_UP:
-                    y_move = -10
-                if event.key == K_DOWN:
-                    y_move = 10
-                if event.key == K_z:
-                    z_move = 10
-                if event.key == K_x:
-                    z_move = -10
-                if event.key == K_a:
-                    rotate_x = 10
-                if event.key == K_d:
-                    rotate_x = -10
-                if event.key == K_w:
-                    rotate_y = 10
-                if event.key == K_s:
-                    rotate_y = -10
-                if event.key == K_q:
-                    rotate_z = 10
-                if event.key == K_e:
-                    rotate_z = -10
+                Render.move_camera(event)
             if event.type == pygame.KEYUP:
                 x_move = 0
                 y_move = 0
@@ -251,6 +161,8 @@ class Render:
                 rotate_x = 0
                 rotate_y = 0
                 rotate_z = 0
+                if event.type == K_UP or event.type == K_DOWN:
+                    Render.move_camera(event)
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glTranslate(x_move, y_move, z_move)
@@ -260,8 +172,8 @@ class Render:
         #glRotatef(rotate, 0.0)
         ground()
 
-        for building in Buildings.registry:
-            Buildings.draw_building(building)
+        for building in Buildings.Buildings.registry:
+            Buildings.Buildings.draw_building(building)
 
         for b in self.flock.boids:
             v = make_bird_vertices(b)
@@ -279,10 +191,6 @@ class Render:
 if __name__ == "__main__":
     flock = Flock.Flock(100, P3.P3(-75, -75, 0), 10)
     f = Render(flock)
-
-    for num in range(10):
-        Buildings(random.randrange(-100, 100), random.randrange(-100, 100), random.randrange(1, 10), random.randrange(1, 10), random.randrange(1, 10), (random.randrange(0,2), random.randrange(0,2), random.randrange(0,2)))
-
     start(0, 0, 800, 600, 1000)
 
 
