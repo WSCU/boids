@@ -4,15 +4,15 @@ import Timer
 import time
 import P3
 import Config
-import Buildings
-import random
+import Building
 
+
+buildings = []
 class World:
 
     tick_time = 10
     tick_step = 0.05
-    x_location = -200
-    y_location = 100
+
 
     def __init__ (self,settings, gui):
         if isinstance(settings, Config.Config_World):
@@ -23,48 +23,30 @@ class World:
         self.gui = gui
 
         if isinstance(settings.screen, Config.Config_Screen):
-            render.start(0,self.settings.screen.y_pos, self.settings.screen.x_size, self.settings.screen.y_size,1000)
-
+            render.start(self.settings.screen.x_pos, self.settings.screen.y_pos, self.settings.screen.x_size,
+                     self.settings.screen.y_size, 1000)
+        #F1 = Flock.Flock(10, P3.P3(-20, 0, 0), 20)
         self.render = render.Render(F1)
 
-        #creating city blocks
-        for b in range (2):
-            self.x_location += 150
-            self.y_location = 100
-
-            for z in range(4):
-                self.y_location -= 20
-                #self.x_location += 20
-
-                for i in range(3):
-                    self.y_location -= 10
-                    self.x_location -= 30
-                    self.c = random.randint(0,1)
-
-                    for t in range(3):
-                        self.c2 = random.randint(0,1)
-                        Buildings.Buildings(self.x_location, self.y_location, 10, random.randrange(20,65), 10, (self.c, 0, self.c2))
-                        self.x_location += 10
 
 
+        b1 = Building.Building(P3.P3(-50,-50,0),10,100,10,(1,0,1))
+        b2 = Building.Building(P3.P3(0,-50,0),10,100,10,(1,1,.5))
+        b3 = Building.Building(P3.P3(50,-50,0),10,100,10,(1,.5,1))
+        buildings.extend([b1,b2,b3])
+
+
+        """
+
+        for num in range(10):
+            render.Buildings(render.random.randrange(-10, 10), render.random.randrange(-10, 10),
+                             render.random.randrange(1, 10), render.random.randrange(1, 10),
+                             render.random.randrange(1, 10), (
+                             render.random.randrange(0, 2), render.random.randrange(0, 2),
+                             render.random.randrange(0, 2)))
+        """
 
         gui.set_tick_method(self.tick)
-    def key_left(self):
-        self.render.key_left()
-        return
-    def key_right(self):
-        self.render.key_right()
-        return
-    def key_up(self):
-        self.render.key_up()
-        return
-    def key_down(self):
-        self.render.key_down()
-        return
-    def key_zoom_in(self):
-        return
-    def key_zoom_out(self):
-        return
 
     def drawFlocks(self):
         self.render.draw()
@@ -75,9 +57,13 @@ class World:
         self.drawFlocks()
         return True
 
+    def key_press(self, event):
+        self.render.key_press(event)
+
 """
     timer = Timer.Timer() #used for measuring elapsed time
 
     timer.restart()
 """
+
 
