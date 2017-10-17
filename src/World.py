@@ -21,8 +21,8 @@ class World:
         self.gui = gui
 
         if isinstance(settings.screen, Config.Config_Screen):
-            render.start(self.settings.screen.x_pos, self.settings.screen.y_pos, self.settings.screen.y_size, 1000)
-
+            render.start(self.settings.screen.x_pos, self.settings.screen.y_pos, self.settings.screen.x_size,
+                     self.settings.screen.y_size, 1000)
         #F1 = Flock.Flock(10, P3.P3(-20, 0, 0), 20)
         self.render = render.Render(F1)
         Buildings.Buildings(P3.P3(0, 0, 0), 10, 100, 10, (1, 0, 1))
