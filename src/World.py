@@ -5,6 +5,7 @@ import time
 import P3
 import Config
 import Building
+import random
 
 
 buildings = []
@@ -12,7 +13,10 @@ class World:
 
     tick_time = 10
     tick_step = 0.05
-
+    x_location = -100
+    y_location = 90
+    c = random.randint(0, 1)
+    c2 = random.randint(0,1)
 
     def __init__ (self,settings, gui):
         if isinstance(settings, Config.Config_World):
@@ -28,23 +32,27 @@ class World:
         #F1 = Flock.Flock(10, P3.P3(-20, 0, 0), 20)
         self.render = render.Render(F1)
 
+        #creating city grid
+        for b in range (2):
+            self.x_location += 100
+            self.y_location = 90
 
+            for z in range(3):
+                self.y_location -= 20
+                #self.x_location += 20
 
-        b1 = Building.Building(P3.P3(-50,-50,0),10,100,10,(1,0,1))
-        b2 = Building.Building(P3.P3(0,-50,0),10,100,10,(1,1,.5))
-        b3 = Building.Building(P3.P3(50,-50,0),10,100,10,(1,.5,1))
-        buildings.extend([b1,b2,b3])
+                for i in range(2):
+                    self.y_location -= 10
+                    self.x_location -= 20
+                    self.c = random.randint(0,1)
 
+                    for t in range(2):
+                        self.c2 = random.randint(0,1)
+                        b_location = P3.P3(self.x_location, self.y_location, 0)
+                        # print(b_location)
+                        buildings.extend([Building.Building(b_location, 10, random.randrange(20,65), 10, (self.c, 0, self.c2))])
+                        self.x_location += 10
 
-        """
-
-        for num in range(10):
-            render.Buildings(render.random.randrange(-10, 10), render.random.randrange(-10, 10),
-                             render.random.randrange(1, 10), render.random.randrange(1, 10),
-                             render.random.randrange(1, 10), (
-                             render.random.randrange(0, 2), render.random.randrange(0, 2),
-                             render.random.randrange(0, 2)))
-        """
 
         gui.set_tick_method(self.tick)
 
