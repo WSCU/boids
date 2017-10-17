@@ -23,18 +23,18 @@ class World:
         self.gui = gui
 
         if isinstance(settings.screen, Config.Config_Screen):
-            render.start(0,self.settings.screen.y_pos, self.settings.screen.x_size, self.settings.screen.y_size,1000)
-
-
-
+            render.start(self.settings.screen.x_pos, self.settings.screen.y_pos, self.settings.screen.x_size,
+                     self.settings.screen.y_size, 1000)
         #F1 = Flock.Flock(10, P3.P3(-20, 0, 0), 20)
         self.render = render.Render(F1)
+
 
 
         b1 = Building.Building(P3.P3(-50,-50,0),10,100,10,(1,0,1))
         b2 = Building.Building(P3.P3(0,-50,0),10,100,10,(1,1,.5))
         b3 = Building.Building(P3.P3(50,-50,0),10,100,10,(1,.5,1))
         buildings.extend([b1,b2,b3])
+
 
         """
 
@@ -57,9 +57,13 @@ class World:
         self.drawFlocks()
         return True
 
+    def key_press(self, event):
+        self.render.key_press(event)
+
 """
     timer = Timer.Timer() #used for measuring elapsed time
 
     timer.restart()
 """
+
 

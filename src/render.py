@@ -5,7 +5,9 @@ from OpenGL.GLU import *
 from OpenGL.GLUT import *
 import os
 
+
 import Building
+import Enums
 import random
 import Flock
 import Boid
@@ -141,6 +143,40 @@ class Render:
             rotate_z = 10
         if event.key == K_e:
             rotate_z = -10
+
+    def key_press(event):
+        if isinstance(event, Enums.CameraMovement):
+            global x_move
+            global y_move
+            global z_move
+            global rotate_x
+            global rotate_y
+            global rotate_z
+            if event == Enums.CameraMovement.PanLeft:
+                x_move = 10
+            if event == Enums.CameraMovement.PanRight:
+                x_move = -10
+            if event == Enums.CameraMovement.PanUp:
+                y_move = -10
+            if event == Enums.CameraMovement.PanDown:
+                y_move = 10
+            if event == Enums.CameraMovement.ZoomIn:
+                z_move = 10
+            if event == Enums.CameraMovement.ZoomOut:
+                z_move = -10
+            if event == Enums.CameraMovement.RotateXLeft:
+                rotate_x = 10
+            if event == Enums.CameraMovement.RotateXRight:
+                rotate_x = -10
+            if event == Enums.CameraMovement.RotateYLeft:
+                rotate_y = 10
+            if event == Enums.CameraMovement.RotateYRight:
+                rotate_y = -10
+            if event == Enums.CameraMovement.RotateZLeft:
+                rotate_z = 10
+            if event == Enums.CameraMovement.RotateZRight:
+                rotate_z = -10
+
     #draws objects on screen (call each tick of the clock)
     def draw(self):
         global x_move
