@@ -4,7 +4,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 import os
-
+import Enums
 import Buildings
 import random
 import Flock
@@ -37,6 +37,7 @@ ground_edges = (
     (3, 2),
     (2, 0)
 )
+
 
 #call to create display
 def start(x, y, width, hieght, depth):
@@ -101,7 +102,6 @@ def draw_bird(vertices):
     glEnd()
 
 
-
 #call to create new flock
 class Render:
 
@@ -140,6 +140,40 @@ class Render:
             rotate_z = 10
         if event.key == K_e:
             rotate_z = -10
+
+    def key_press(event):
+        if isinstance(event, Enums.CameraMovement):
+            global x_move
+            global y_move
+            global z_move
+            global rotate_x
+            global rotate_y
+            global rotate_z
+            if event == Enums.CameraMovement.PanLeft:
+                x_move = 10
+            if event == Enums.CameraMovement.PanRight:
+                x_move = -10
+            if event == Enums.CameraMovement.PanUp:
+                y_move = -10
+            if event == Enums.CameraMovement.PanDown:
+                y_move = 10
+            if event == Enums.CameraMovement.ZoomIn:
+                z_move = 10
+            if event == Enums.CameraMovement.ZoomOut:
+                z_move = -10
+            if event == Enums.CameraMovement.RotateXLeft:
+                rotate_x = 10
+            if event == Enums.CameraMovement.RotateXRight:
+                rotate_x = -10
+            if event == Enums.CameraMovement.RotateYLeft:
+                rotate_y = 10
+            if event == Enums.CameraMovement.RotateYRight:
+                rotate_y = -10
+            if event == Enums.CameraMovement.RotateZLeft:
+                rotate_z = 10
+            if event == Enums.CameraMovement.RotateZRight:
+                rotate_z = -10
+
     #draws objects on screen (call each tick of the clock)
     def draw(self):
         global x_move
@@ -191,10 +225,6 @@ class Render:
 if __name__ == "__main__":
     flock = Flock.Flock(100, P3.P3(-75, -75, 0), 10)
     f = Render(flock)
-
-    for num in range(10):
-        Buildings(random.randrange(-100, 100), random.randrange(-100, 100), random.randrange(1, 10), random.randrange(1, 10), random.randrange(1, 10), (random.randrange(0,2), random.randrange(0,2), random.randrange(0,2)))
-
     start(0, 0, 800, 600, 1000)
 
 

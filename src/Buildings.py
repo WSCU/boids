@@ -15,20 +15,39 @@ building_vertices = (
 class Buildings(object):
     registry = []
 
-    def __init__(self, x, y, width, height, depth, color):
+    #please note that position will be a P3.P3
+    def __init__(self, position, width, height, depth, color):
         self.registry.append(self)
-        self.x = x
-        self.y = y
+        self.x = position.x
+        self.y = position.y
+        self.z = position.z
         self.width = width
         self.height = height
         self.depth = depth
         self.color = color
-
+        
+        
+    def forceField(self, boidPosition, registry): # A method to find a building's force pushing on a given boid's position(P3) # this should always follow the registry location
+        sum = P3.P3(0,0,0)
+        for building in registry:
+            buildingPos = P3.P3(building.x, building.y, building.z)
+            c = P3.P3(building.x + (building.width / 2), building.y + (building.height / 2), building.z + (building.depth / 2))  # Center of the building
+            r = boidPosition - buildingPos                    # Vector between the building and the boidPosition
+            rb = buildingPos - c                              # Vector between the building center and corner (the diagonal)
+            x = r.normalize()* (r.distance() - rb.distance()) # Vector between boidPosition and inner limit of the forceField
+            fmagnitude = 1 / x.distance()**3                  # Magnitude is based on the power of 3...this power may be changed to infulence the gradiant of decent
+            fDirection = P3.P3.normalize(boidPosition - (boidPosition - c)) # The direction of the force from building to boid
+            force = fmagnitude * fDirection                   # Create final force to be returned from its vector
+            sum += force                                      # Return the final force on the given boid position (P3)
+        return sum * (1/len(registry))
+		
     # sets building verts (render use only)
+
     def set_building(self):
         new_vertices = []
         final_vertices = []
         global building_count
+
 
         # scaling
         for nvert in building_vertices:
@@ -43,7 +62,7 @@ class Buildings(object):
             fnew_vert.append(newv_z)
 
             new_vertices.append(fnew_vert)
-
+       
         # positoning
         for vert in new_vertices:
             new_vert = []
@@ -61,35 +80,35 @@ class Buildings(object):
         return final_vertices
 
 
-    # displays buildings (render use only)
-    def draw_building(build):
+    #displays buildings (render use only)
+    def draw_building(self):
         edges = (
-            (0, 1),
-            (0, 4),
-            (1, 2),
-            (1, 5),
-            (2, 3),
-            (2, 6),
-            (3, 0),
-            (3, 7),
-            (4, 5),
-            (5, 6),
-            (6, 7),
-            (7, 4)
+        (0, 1),
+        (0, 4),
+        (1, 2),
+        (1, 5),
+        (2, 3),
+        (2, 6),
+        (3, 0),
+        (3, 7),
+        (4, 5),
+        (5, 6),
+        (6, 7),
+        (7, 4)
         )
         surfaces = (
-            (0, 1, 2, 3),
-            (2, 6, 5, 1),
-            (0, 1, 4, 5),
-            (0, 3, 7, 4),
-            (3, 7, 6, 2),
-            (7, 4, 5, 6)
+            (0,1,2,3),
+            (2,6,5,1),
+            (0,1,4,5),
+            (0,3,7,4),
+            (3,7,6,2),
+            (7,4,5,6)
         )
-        vertices = Buildings.set_building(build)
+        vertices = Buildings.set_building(self)
         glBegin(GL_QUADS)
         for surface in surfaces:
             for vertex in surface:
-                glColor3fv(build.color)
+                glColor3fv(self.color)
                 glVertex3fv(vertices[vertex])
         glEnd()
 
