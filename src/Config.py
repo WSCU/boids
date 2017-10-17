@@ -5,6 +5,8 @@ import P3
 
 class Config_World(object):
 
+    instance = 2
+
     def __init__(self,objects,flocks,behaviors,screen=None):
         self.screen=screen
         self.objects=objects
@@ -31,6 +33,7 @@ class Config_World(object):
 
         return dict(objects=l_objects,flocks=l_flocks,behaviors=l_behaviors)
 
+    @staticmethod
     def from_dict(dict):
 
         l_objects = dict['objects']
@@ -77,6 +80,7 @@ class Config_Static_Object(object):
     def to_dict(self):
         return dict(id=self.id,x=self.x,y=self.y,height=self.height,width=self.width)
 
+    @staticmethod
     def from_dict(dict):
         if dict!=None:
             return Config_Static_Object(
@@ -106,6 +110,7 @@ class Config_Flock(object):
 
         return dict(id=self.id,boids=self.boids,count=self.count,behavior_id=self.behavior_id,center=center,radius=self.radius)
 
+    @staticmethod
     def from_dict(dict):
         value = Config_Flock(dict['id'])
 
@@ -147,5 +152,6 @@ class Config_Behavior(object):
     def to_dict(self):
         return dict(id=self.id,neighbor_weight=self.neighbor_weight,center_weight=self.center_weight,direction_weight=self.direction_weight)
 
+    @staticmethod
     def from_dict(dict):
         return Config_Behavior(dict['id'],dict['neighbor_weight'],dict['center_weight'],dict['direction_weight'])
