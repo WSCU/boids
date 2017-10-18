@@ -55,12 +55,21 @@ def start(x, y, width, hieght, depth):
 
 
 # draws the ground (render use only)
-def ground():
+def ground(gridLines):
     glBegin(GL_QUADS)
     for edges in ground_edges:
         for vert in edges:
             glColor3fv((0, .5, .5))
             glVertex3fv(ground_vertices[vert])
+    glEnd()
+    glBegin(GL_LINES)
+    for x in range (1, gridLines):
+        glColor3fv((.5, 0, 0))
+        y = -100 + (x * (200/gridLines))
+        glVertex3fv((y,-100,-.1))
+        glVertex3fv((y,100,-.1))
+        glVertex3fv((-100,y,-.1))
+        glVertex3fv((100,y,-.1))
     glEnd()
 
 
@@ -188,7 +197,7 @@ class Render:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.exit()
+                #sys.exit()
             if event.type == pygame.KEYDOWN:
                 Render.move_camera(event)
             if event.type == pygame.KEYUP:
@@ -207,7 +216,7 @@ class Render:
         glRotatef(rotate_y, 0.0, 1.0, 0.0)
         glRotatef(rotate_z, 0.0, 0.0, 1.0)
         #glRotatef(rotate, 0.0)
-        ground()
+        ground(10)
 
         for building in World.buildings:
             Building.Building.draw_building(building)
@@ -222,7 +231,8 @@ class Render:
 
 
 
-
+    def dispose(self):
+        pygame.quit()
 
 
 if __name__ == "__main__":
