@@ -2,16 +2,24 @@
 import Config as config
 import World as world
 import tkinter as tk
+from tkinter import Event
 import tkinter.ttk as ttk
 from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import asksaveasfilename
 import json
 import P3
 import platform
+from enum import Enum
+from Enums import CameraMovement
 
 color_frame_background = 'lightgray'
 color_confirm = 'lightgreen'
 color_cancel = 'pink'
+
+class Alignment(Enum):
+    Empty=0
+    Top=1
+    Left=2
 
 class Boid_Behavior:
 
@@ -44,6 +52,7 @@ class _Gui_Widget:
                 self.set_enabled(is_enabled,child)
 
 class _Widget_Flock(_Gui_Widget):
+    # <editor-fold desc="Getters and Setters">
 
     def get_flock_size_enabled(self):
         return self.is_flock_size_enabled
@@ -191,6 +200,8 @@ class _Widget_Flock(_Gui_Widget):
         if self.selected_value!=None and isinstance(self.selected_value,config.Config_Flock):
             self.selected_value.radius=self.get_flock_radius()
 
+    # </editor-fold>
+
     def add_flock(self,flock):
         if isinstance(flock,config.Config_Flock) and isinstance(self.listbox_flock,tk.Listbox):
             if flock.id not in self.flocks.keys():
@@ -209,8 +220,20 @@ class _Widget_Flock(_Gui_Widget):
         if isinstance(self.listbox_flock,tk.Listbox):
             self.listbox_flock.delete(self.listbox_flock.get(0,tk.END).index(id))
 
-    def __init__(self,parent):
-        if isinstance(parent,tk.Frame):
+    def __init__(self,parent,alignment):
+        if isinstance(parent,tk.Frame) and isinstance(alignment,Alignment):
+
+            self.alignment=alignment
+
+            if alignment==Alignment.Top:
+                self.align_side=tk.LEFT
+                self.align_anchor=tk.N
+            elif alignment==Alignment.Left:
+                self.align_side = tk.TOP
+                self.align_anchor = tk.W
+            else:
+                self.align_side = tk.LEFT
+                self.align_anchor = tk.N
 
             self.flocks = {}
             self.frame_flock_size = None
@@ -238,13 +261,51 @@ class _Widget_Flock(_Gui_Widget):
             self.on_behavior_select()
 
     def init_frame(self,parent):
-        frame = tk.Frame(parent, bd=2, relief=tk.GROOVE, bg=color_frame_background)
-        frame.pack(side=tk.LEFT, anchor=tk.N, padx=1, pady=1)
 
-        label_flock_settings = tk.Label(frame, text="Flocks", bd=2, relief=tk.GROOVE)
-        label_flock_settings.pack(side=tk.TOP, padx=3, pady=3)
+        if self.alignment==Alignment.Top:
+            frame = tk.Frame(parent, bd=2, relief=tk.GROOVE, bg=color_frame_background)
+            frame.pack(side=self.align_side, anchor=self.align_anchor, padx=1, pady=1)
 
-        frame_flock_list = tk.Frame(frame, bd=2, relief=tk.GROOVE)
+            label_flock_settings = tk.Label(frame, text="Flocks", bd=2, relief=tk.GROOVE)
+            label_flock_settings.pack(side=tk.TOP, padx=3, pady=3)
+
+            parent_frame = tk.Frame(frame)
+            parent_frame.pack(side=tk.LEFT, anchor=tk.N)
+
+            parent_frame_1 = tk.Frame(parent_frame)
+            parent_frame_1.pack(side=tk.LEFT, anchor=tk.N)
+            parent_frame_2 = parent_frame_1
+            self.init_frame_flock_list(parent_frame_1)
+            self.init_frame_flock_size(parent_frame_1)
+            self.init_frame_flock_radius(parent_frame_1)
+            self.init_frame_flock_behavior(parent_frame_1)
+            self.init_frame_flock_center(parent_frame_2)
+        else:
+            frame = tk.Frame(parent, bd=2, relief=tk.GROOVE, bg=color_frame_background)
+            frame.pack(side=self.align_side,fill=tk.X, anchor=self.align_anchor, padx=1, pady=1)
+
+            label_flock_settings = tk.Label(frame, text="Flocks", bd=2, relief=tk.GROOVE)
+            label_flock_settings.pack(side=tk.TOP, padx=3, pady=3)
+
+            parent_frame = tk.Frame(frame, bg=color_frame_background)
+            parent_frame.pack(side=tk.LEFT, anchor=tk.N, fill=tk.X, expand=tk.YES)
+
+            parent_frame_1 = tk.Frame(parent_frame)
+            parent_frame_1.pack(side=tk.TOP, anchor=tk.W)
+            parent_frame_2=tk.Frame(parent_frame)
+            parent_frame_2.pack(side=tk.TOP,anchor=tk.W)
+            self.init_frame_flock_list(parent_frame_1)
+            self.init_frame_flock_radius(parent_frame_1)
+            self.init_frame_flock_behavior(parent_frame_1)
+            self.init_frame_flock_center(parent_frame_2)
+            self.init_frame_flock_size(parent_frame_2)
+
+
+
+        self.set_frame(frame)
+
+    def init_frame_flock_list(self,parent):
+        frame_flock_list = tk.Frame(parent, bd=2, relief=tk.GROOVE)
         frame_flock_list.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         frame_flock_list_1 = tk.Frame(frame_flock_list)
@@ -268,13 +329,18 @@ class _Widget_Flock(_Gui_Widget):
         frame_flock_list_2 = tk.Frame(frame_flock_list)
         frame_flock_list_2.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.S)
 
-        button_remove_flock = tk.Button(frame_flock_list_2, text="Remove", bg=color_cancel, bd=2, relief=tk.GROOVE, command=self.flock_remove_onclick)
-        button_remove_flock.pack(side=tk.BOTTOM, fill=tk.BOTH)
+        button_remove_flock = tk.Button(frame_flock_list_2, text="Remove", bg=color_cancel, bd=2, relief=tk.GROOVE,
+                                        command=self.flock_remove_onclick)
+        button_remove_flock.pack(side=tk.BOTTOM, fill=tk.X)
 
-        button_add_flock = tk.Button(frame_flock_list_2, text="Add", bg=color_confirm, bd=2, relief=tk.GROOVE, command=self.flock_add_onclick)
-        button_add_flock.pack(side=tk.BOTTOM, fill=tk.BOTH)
+        button_add_flock = tk.Button(frame_flock_list_2, text="Add", bg=color_confirm, bd=2, relief=tk.GROOVE,
+                                     command=self.flock_add_onclick)
+        button_add_flock.pack(side=tk.BOTTOM, fill=tk.X)
 
-        self.frame_flock_size = tk.Frame(frame, bd=2, relief=tk.GROOVE)
+        return frame_flock_list
+
+    def init_frame_flock_size(self,parent):
+        self.frame_flock_size = tk.Frame(parent, bd=2, relief=tk.GROOVE)
         self.frame_flock_size.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         label_flock_size = tk.Label(self.frame_flock_size, text="Size")
@@ -282,9 +348,25 @@ class _Widget_Flock(_Gui_Widget):
 
         self.text_flock_size = tk.Text(self.frame_flock_size, height=1, width=2, bd=2, relief=tk.GROOVE)
         self.text_flock_size.pack(side=tk.TOP, padx=3, pady=3)
-        self.text_flock_size.bind('<FocusOut>',self.flock_size_onfocusout)
+        self.text_flock_size.bind('<FocusOut>', self.flock_size_onfocusout)
 
-        self.frame_flock_behavior = tk.Frame(frame, bd=2, relief=tk.GROOVE)
+        return self.frame_flock_size
+
+    def init_frame_flock_radius(self,parent):
+        self.frame_flock_radius = tk.Frame(parent, bd=2, relief=tk.GROOVE)
+        self.frame_flock_radius.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
+
+        label_flock_radius = tk.Label(self.frame_flock_radius, text="Radius")
+        label_flock_radius.pack(side=tk.TOP, padx=3, pady=3)
+
+        self.text_flock_radius = tk.Text(self.frame_flock_radius, height=1, width=2, bd=2, relief=tk.GROOVE)
+        self.text_flock_radius.pack(side=tk.TOP, padx=3, pady=3)
+        self.text_flock_radius.bind('<FocusOut>', self.flock_radius_onfocusout)
+
+        return self.frame_flock_radius
+
+    def init_frame_flock_behavior(self,parent):
+        self.frame_flock_behavior = tk.Frame(parent, bd=2, relief=tk.GROOVE)
         self.frame_flock_behavior.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         label_flock_behavior = tk.Label(self.frame_flock_behavior, text="Behavior")
@@ -294,7 +376,10 @@ class _Widget_Flock(_Gui_Widget):
         self.text_flock_behavior.pack(side=tk.TOP, padx=3, pady=3)
         self.text_flock_behavior.bind('<FocusOut>', self.flock_behavior_onfocusout)
 
-        self.frame_flock_center = tk.Frame(frame, bd=2, relief=tk.GROOVE)
+        return self.frame_flock_behavior
+
+    def init_frame_flock_center(self,parent):
+        self.frame_flock_center = tk.Frame(parent, bd=2, relief=tk.GROOVE)
         self.frame_flock_center.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         label_flock_center = tk.Label(self.frame_flock_center, text="Center")
@@ -324,17 +409,9 @@ class _Widget_Flock(_Gui_Widget):
         self.text_flock_center_z.pack(side=tk.LEFT, padx=3, pady=3)
         self.text_flock_center_z.bind('<FocusOut>', self.flock_center_z_onfocusout)
 
-        self.frame_flock_radius = tk.Frame(frame, bd=2, relief=tk.GROOVE)
-        self.frame_flock_radius.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
+        return self.frame_flock_center
 
-        label_flock_radius = tk.Label(self.frame_flock_radius, text="Radius")
-        label_flock_radius.pack(side=tk.TOP, padx=3, pady=3)
-
-        self.text_flock_radius = tk.Text(self.frame_flock_radius, height=1, width=2, bd=2, relief=tk.GROOVE)
-        self.text_flock_radius.pack(side=tk.TOP, padx=3, pady=3)
-        self.text_flock_radius.bind('<FocusOut>', self.flock_radius_onfocusout)
-
-        self.set_frame(frame)
+    # <editor-fold desc="Some Events">
 
     def on_behavior_select(self, evt=None):
         w = self.listbox_flock
@@ -392,6 +469,8 @@ class _Widget_Flock(_Gui_Widget):
             self.remove_flock(id)
             self.on_behavior_select()
 
+    # </editor-fold>
+
     def to_config(self):
         return self.flocks
 
@@ -402,6 +481,8 @@ class _Widget_Flock(_Gui_Widget):
                     self.add_flock(data[key])
 
 class _Widget_Behavior(_Gui_Widget):
+    # <editor-fold desc="Getters and Setters">
+
     def get_behavior_neighbor_enabled(self):
         return self.is_behavior_neighbor_enabled
 
@@ -474,6 +555,8 @@ class _Widget_Behavior(_Gui_Widget):
         if self.selected_value!=None and isinstance(self.selected_value,config.Config_Behavior):
             self.selected_value.direction_weight=self.get_behavior_direction()
 
+    # </editor-fold>
+
     def add_behavior(self, behavior):
         if isinstance(behavior, config.Config_Behavior) and isinstance(self.listbox_behaviors, tk.Listbox):
             if behavior.id not in self.behaviors.keys():
@@ -492,8 +575,21 @@ class _Widget_Behavior(_Gui_Widget):
         if isinstance(self.listbox_behavior, tk.Listbox):
             self.listbox_behavior.delete(self.listbox_behavior.get(0, tk.END).index(id))
 
-    def __init__(self, parent):
-        if isinstance(parent, tk.Frame):
+    def __init__(self, parent, alignment):
+        if isinstance(parent,tk.Frame) and isinstance(alignment,Alignment):
+
+            self.alignment=alignment
+
+            if alignment==Alignment.Top:
+                self.align_side=tk.LEFT
+                self.align_anchor=tk.N
+            elif alignment==Alignment.Left:
+                self.align_side = tk.TOP
+                self.align_anchor = tk.W
+            else:
+                self.align_side = tk.LEFT
+                self.align_anchor = tk.N
+
             self.behaviors = {}
 
             self.listbox_behaviors = None
@@ -516,13 +612,48 @@ class _Widget_Behavior(_Gui_Widget):
             self.on_behavior_select()
 
     def init_frame(self,parent):
-        frame = tk.Frame(parent, bd=2, relief=tk.GROOVE, bg=color_frame_background)
-        frame.pack(side=tk.LEFT, anchor=tk.N, padx=1, pady=1)
 
-        label_behavior_settings = tk.Label(frame, text="Behaviors", bd=2, relief=tk.GROOVE)
-        label_behavior_settings.pack(side=tk.TOP, padx=3, pady=3)
+        if self.alignment == Alignment.Top:
+            frame = tk.Frame(parent, bd=2, relief=tk.GROOVE, bg=color_frame_background)
+            frame.pack(side=self.align_side, anchor=self.align_anchor, padx=1, pady=1)
 
-        frame_behavior_list = tk.Frame(frame, bd=2, relief=tk.GROOVE)
+            label_behavior_settings = tk.Label(frame, text="Behaviors", bd=2, relief=tk.GROOVE)
+            label_behavior_settings.pack(side=tk.TOP, padx=3, pady=3)
+
+            parent_frame = tk.Frame(frame)
+            parent_frame.pack(side=tk.LEFT, anchor=tk.N)
+
+            parent_frame_1 = tk.Frame(parent_frame)
+            parent_frame_1.pack(side=tk.LEFT, anchor=tk.N)
+            parent_frame_2 = parent_frame_1
+            self.init_frame_behavior_list(parent_frame_1)
+            self.init_frame_behavior_neighbor(parent_frame_1)
+            self.init_frame_behavior_center(parent_frame_1)
+            self.init_frame_behavior_direction(parent_frame_1)
+        else:
+            frame = tk.Frame(parent, bd=2, relief=tk.GROOVE, bg=color_frame_background)
+            frame.pack(side=self.align_side,fill=tk.X, expand=tk.YES, anchor=self.align_anchor, padx=1, pady=1)
+
+            label_behavior_settings = tk.Label(frame, text="Behaviors", bd=2, relief=tk.GROOVE)
+            label_behavior_settings.pack(side=tk.TOP, padx=3, pady=3)
+
+            parent_frame = tk.Frame(frame)
+            parent_frame.pack(side=tk.LEFT, anchor=tk.N)
+
+            parent_frame_1 = tk.Frame(parent_frame)
+            parent_frame_1.pack(side=tk.TOP, anchor=tk.W)
+            parent_frame_2 = tk.Frame(parent_frame)
+            parent_frame_2.pack(side=tk.TOP, anchor=tk.W)
+            self.init_frame_behavior_list(parent_frame_1)
+            self.init_frame_behavior_neighbor(parent_frame_2)
+            self.init_frame_behavior_center(parent_frame_2)
+            self.init_frame_behavior_direction(parent_frame_2)
+
+
+        self.set_frame(frame)
+
+    def init_frame_behavior_list(self,parent):
+        frame_behavior_list = tk.Frame(parent, bd=2, relief=tk.GROOVE)
         frame_behavior_list.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         frame_behavior_list_1 = tk.Frame(frame_behavior_list)
@@ -545,13 +676,18 @@ class _Widget_Behavior(_Gui_Widget):
         frame_behavior_list_2 = tk.Frame(frame_behavior_list)
         frame_behavior_list_2.pack(side=tk.LEFT, fill=tk.Y, padx=1, anchor=tk.S)
 
-        button_remove_behavior = tk.Button(frame_behavior_list_2, text="Remove", bg=color_cancel, bd=2, relief=tk.GROOVE, command=self.behavior_remove_onclick)
-        button_remove_behavior.pack(side=tk.BOTTOM, fill=tk.BOTH)
+        button_remove_behavior = tk.Button(frame_behavior_list_2, text="Remove", bg=color_cancel, bd=2,
+                                           relief=tk.GROOVE, command=self.behavior_remove_onclick)
+        button_remove_behavior.pack(side=tk.BOTTOM, fill=tk.X)
 
-        button_add_behavior = tk.Button(frame_behavior_list_2, text="Add", bg=color_confirm, bd=2, relief=tk.GROOVE, command=self.behavior_add_onclick)
-        button_add_behavior.pack(side=tk.BOTTOM, fill=tk.BOTH)
+        button_add_behavior = tk.Button(frame_behavior_list_2, text="Add", bg=color_confirm, bd=2, relief=tk.GROOVE,
+                                        command=self.behavior_add_onclick)
+        button_add_behavior.pack(side=tk.BOTTOM, fill=tk.X)
 
-        self.frame_behavior_neighbor = tk.Frame(frame, bd=2, relief=tk.GROOVE)
+        return frame_behavior_list
+
+    def init_frame_behavior_neighbor(self,parent):
+        self.frame_behavior_neighbor = tk.Frame(parent, bd=2, relief=tk.GROOVE)
         self.frame_behavior_neighbor.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         label_behavior_neighbor = tk.Label(self.frame_behavior_neighbor, text="Neighbor")
@@ -561,7 +697,10 @@ class _Widget_Behavior(_Gui_Widget):
         self.text_behavior_neighbor.pack(side=tk.TOP, padx=3, pady=3)
         self.text_behavior_neighbor.bind('<FocusOut>', self.behavior_neighbor_onfocusout)
 
-        self.frame_behavior_center = tk.Frame(frame, bd=2, relief=tk.GROOVE)
+        return self.frame_behavior_neighbor
+
+    def init_frame_behavior_center(self,parent):
+        self.frame_behavior_center = tk.Frame(parent, bd=2, relief=tk.GROOVE)
         self.frame_behavior_center.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         label_behavior_center = tk.Label(self.frame_behavior_center, text="Center")
@@ -571,7 +710,8 @@ class _Widget_Behavior(_Gui_Widget):
         self.text_behavior_center.pack(side=tk.TOP, padx=3, pady=3)
         self.text_behavior_center.bind('<FocusOut>', self.behavior_center_onfocusout)
 
-        self.frame_behavior_direction = tk.Frame(frame, bd=2, relief=tk.GROOVE)
+    def init_frame_behavior_direction(self,parent):
+        self.frame_behavior_direction = tk.Frame(parent, bd=2, relief=tk.GROOVE)
         self.frame_behavior_direction.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         label_behavior_direction = tk.Label(self.frame_behavior_direction, text="Direction")
@@ -580,8 +720,6 @@ class _Widget_Behavior(_Gui_Widget):
         self.text_behavior_direction = tk.Text(self.frame_behavior_direction, height=1, width=2, bd=2, relief=tk.GROOVE)
         self.text_behavior_direction.pack(side=tk.TOP, padx=3, pady=3)
         self.text_behavior_direction.bind('<FocusOut>', self.behavior_direction_onfocusout)
-
-        self.set_frame(frame)
 
     def on_behavior_select(self, evt=None):
         w = self.listbox_behaviors
@@ -634,18 +772,29 @@ class _Widget_Behavior(_Gui_Widget):
 
 class _Widget_Boid(_Gui_Widget):
 
-    def __init__(self,parent):
-        if isinstance(parent,tk.Frame):
+    def __init__(self,parent,alignment):
+        if isinstance(parent,tk.Frame) and isinstance(alignment,Alignment):
+
+            if alignment==Alignment.Top:
+                self.align_side=tk.LEFT
+                self.align_anchor=tk.N
+            elif alignment==Alignment.Left:
+                self.align_side = tk.TOP
+                self.align_anchor = tk.W
+            else:
+                self.align_side = tk.LEFT
+                self.align_anchor = tk.W
+
             self.__frame = self.init_frame(parent)
 
     def init_frame(self,parent):
-        frame_boid = tk.Frame(parent, bd=2, relief=tk.GROOVE, bg=color_frame_background)
-        frame_boid.pack(side=tk.LEFT, anchor=tk.N, padx=1, pady=1)
+        frame = tk.Frame(parent, bd=2, relief=tk.GROOVE, bg=color_frame_background)
+        frame.pack(side=self.align_side, anchor=self.align_anchor, padx=1, pady=1)
 
-        label_boid_settings = tk.Label(frame_boid, text="Boids", bd=2, relief=tk.GROOVE)
+        label_boid_settings = tk.Label(frame, text="Boids", bd=2, relief=tk.GROOVE)
         label_boid_settings.pack(side=tk.TOP, padx=3, pady=3)
 
-        frame_boid_list = tk.Frame(frame_boid, bd=2, relief=tk.GROOVE)
+        frame_boid_list = tk.Frame(frame, bd=2, relief=tk.GROOVE)
         frame_boid_list.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         frame_boid_list_1 = tk.Frame(frame_boid_list)
@@ -674,7 +823,7 @@ class _Widget_Boid(_Gui_Widget):
         #button_add_boid = tk.Button(frame_boid_list_2, text="Add", bg=color_confirm, bd=2, relief=tk.GROOVE)
         #button_add_boid.pack(side=tk.BOTTOM, fill=tk.BOTH)
 
-        frame_boid_id = tk.Frame(frame_boid, bd=2, relief=tk.GROOVE)
+        frame_boid_id = tk.Frame(frame, bd=2, relief=tk.GROOVE)
         frame_boid_id.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         label_boid_id = tk.Label(frame_boid_id, text="Id")
@@ -683,7 +832,7 @@ class _Widget_Boid(_Gui_Widget):
         text_boid_id = tk.Text(frame_boid_id, height=1, width=2, bd=2, relief=tk.GROOVE)
         text_boid_id.pack(side=tk.TOP, padx=3, pady=3)
 
-        frame_boid_velocity_max = tk.Frame(frame_boid, bd=2, relief=tk.GROOVE)
+        frame_boid_velocity_max = tk.Frame(frame, bd=2, relief=tk.GROOVE)
         frame_boid_velocity_max.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         label_boid_velocity_max = tk.Label(frame_boid_velocity_max, text="Max Velocity")
@@ -692,7 +841,7 @@ class _Widget_Boid(_Gui_Widget):
         text_boid_velocity_max = tk.Text(frame_boid_velocity_max, height=1, width=2, bd=2, relief=tk.GROOVE)
         text_boid_velocity_max.pack(side=tk.TOP, padx=3, pady=3)
 
-        frame_boid_velocity = tk.Frame(frame_boid, bd=2, relief=tk.GROOVE)
+        frame_boid_velocity = tk.Frame(frame, bd=2, relief=tk.GROOVE)
         frame_boid_velocity.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         label_boid_velocity = tk.Label(frame_boid_velocity, text="Velocity")
@@ -719,7 +868,7 @@ class _Widget_Boid(_Gui_Widget):
         text_boid_velocity_z = tk.Text(frame_boid_velocity_1, height=1, width=4, bd=2, relief=tk.GROOVE)
         text_boid_velocity_z.pack(side=tk.LEFT, padx=3, pady=3)
 
-        frame_boid_position = tk.Frame(frame_boid, bd=2, relief=tk.GROOVE)
+        frame_boid_position = tk.Frame(frame, bd=2, relief=tk.GROOVE)
         frame_boid_position.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         label_boid_position = tk.Label(frame_boid_position, text="Position")
@@ -746,7 +895,7 @@ class _Widget_Boid(_Gui_Widget):
         text_boid_position_z = tk.Text(frame_boid_position_1, height=1, width=4, bd=2, relief=tk.GROOVE)
         text_boid_position_z.pack(side=tk.LEFT, padx=3, pady=3)
 
-        frame_boid_behavior_list = tk.Frame(frame_boid, bd=2, relief=tk.GROOVE)
+        frame_boid_behavior_list = tk.Frame(frame, bd=2, relief=tk.GROOVE)
         frame_boid_behavior_list.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=3, pady=3)
 
         label_boid = tk.Label(frame_boid_behavior_list, text="Behavior")
@@ -765,24 +914,35 @@ class _Widget_Boid(_Gui_Widget):
 
         #listbox_boid_behavior.pack(side=tk.TOP, fill=tk.Y)
 
-        return frame_boid
+        self.set_frame(frame)
 
 class _Widget_Commands(_Gui_Widget):
     def get_frame(self):
         return self.__frame
 
-    def __init__(self,parent, load_onclick, save_onclick,saveas_onclick, startstop_onclick):
-        if isinstance(parent,tk.Frame):
+    def __init__(self,parent,alignment, load_onclick, save_onclick,saveas_onclick, startstop_onclick):
+        if isinstance(parent,tk.Frame) and isinstance(alignment,Alignment):
+
+            if alignment==Alignment.Top:
+                self.align_side=tk.TOP
+                self.align_anchor=tk.W
+            elif alignment==Alignment.Left:
+                self.align_side = tk.LEFT
+                self.align_anchor = tk.N
+            else:
+                self.align_side = tk.TOP
+                self.align_anchor = tk.W
+
             self.__frame = self.init_frame(parent,load_onclick,save_onclick,saveas_onclick,startstop_onclick)
 
     def init_frame(self,parent, load_onclick, save_onclick,saveas_onclick, startstop_onclick):
-        frame_commands = tk.Frame(parent, bd=2, relief=tk.GROOVE, bg=color_frame_background)
-        frame_commands.pack(side=tk.LEFT, fill=tk.Y, anchor=tk.N, padx=1, pady=1)
+        frame = tk.Frame(parent, bd=2, relief=tk.GROOVE, bg=color_frame_background)
+        frame.pack(side=self.align_side, fill=tk.X, expand=tk.YES, anchor=self.align_anchor, padx=1, pady=1)
 
-        label_commands = tk.Label(frame_commands, text="Commands", bd=2, relief=tk.GROOVE)
+        label_commands = tk.Label(frame, text="Commands", bd=2, relief=tk.GROOVE)
         label_commands.pack(side=tk.TOP, padx=3, pady=3)
 
-        frame_command_config = tk.Frame(frame_commands, bd=2, relief=tk.GROOVE)
+        frame_command_config = tk.Frame(frame, bd=2, relief=tk.GROOVE)
         frame_command_config.pack(side=tk.LEFT, padx=1, pady=1)
 
         button_load_config = tk.Button(frame_command_config, text="Load Config", bd=2, relief=tk.GROOVE, command=load_onclick)
@@ -794,13 +954,13 @@ class _Widget_Commands(_Gui_Widget):
         button_saveas_config = tk.Button(frame_command_config, text="Save Config As", bd=2, relief=tk.GROOVE, command=saveas_onclick)
         button_saveas_config.pack(side=tk.TOP, fill=tk.X)
 
-        frame_simulation = tk.Frame(frame_commands, bd=2, relief=tk.GROOVE)
-        frame_simulation.pack(side=tk.LEFT, fill=tk.Y, padx=1, pady=1)
+        frame_simulation = tk.Frame(frame, bd=2, relief=tk.GROOVE)
+        frame_simulation.pack(side=tk.LEFT, fill=tk.Y, expand=tk.YES, padx=1, pady=1)
 
         button_simulation_toggle = tk.Button(frame_simulation, text="Start/Stop Simulation", bd=2, relief=tk.GROOVE,command=startstop_onclick)
         button_simulation_toggle.pack(fill=tk.BOTH, expand=tk.YES)
 
-        return frame_commands
+        self.set_frame(frame)
 
 class GUI(tk.Frame):
 
@@ -850,23 +1010,33 @@ class GUI(tk.Frame):
         self.master = tk.Tk()
         self.master.resizable(0, 0)
         self.default_height = 120
+        self.default_width = 270
 
         self.tick_wait = world.World.tick_time
         self.tick_method = None
         self.file_path = None
+        self.world_started = False
 
         tk.Frame.__init__(self, self.master)
-        #self.config = Config()
         self.init_ui()
+
+        self.master.bind('<FocusIn>',self.window_enter)
+        self.master.bind('<Key>',self.key_press)
 
         self.master.after(self.tick_wait, self.tick)
         self.master.mainloop()
 
     def init_ui(self):
-        self.init_position()
         self.init_controls()
 
-    def init_position(self):
+    def init_controls(self):
+
+        if self.master.winfo_screenwidth()>=1920:
+            self.init_full_gui()
+        else:
+            self.init_compact_gui()
+
+    def init_full_gui(self):
         self.master.title("Python Boids")
         self.pack(fill=tk.BOTH, expand=True)
         self.app_window = tk.Toplevel(self.master)
@@ -875,48 +1045,51 @@ class GUI(tk.Frame):
         self.app_frame.pack()
 
         self.sw = self.master.winfo_screenwidth()
-        self.sh = self.master.winfo_screenheight()-(self.default_height + self.get_os_title_height()*2+30)
+        self.sh = self.master.winfo_screenheight() - (self.default_height + self.get_os_title_height() * 2 + 40)
         self.ui_x = -7
         self.ui_y = 0
-        self.world_x=self.ui_x
-        self.world_y=self.ui_y+self.default_height+60
+        self.world_x = self.ui_x + 7
+        self.world_y = self.ui_y + self.default_height + 60
 
-        #self.config.set_size((sw, sh-self.default_height))
+        # self.config.set_size((sw, sh-self.default_height))
 
         self.master.geometry('%dx%d+%d+%d' % (self.sw, self.default_height, self.ui_x, self.ui_y))
 
-    def init_controls(self):
-
-        self.__widget_flock = _Widget_Flock(self)
-        self.__widget_behavior = _Widget_Behavior(self)
-        #self.__widget_boid = _Widget_Boid(self)
-        self.__widget_commands = _Widget_Commands(self,self.load_onclick,self.save_onclick,self.saveas_onclick,self.start_onclick)
-
-        #self.__widget_flock.set_enabled(False)
-        #self.__widget_behavior.set_enabled(False)
-        #self.__widget_commands.set_enabled(False)
-
-        #if self.sw>=1920:
-            #self.init_full_gui()
-        #else:
-            #self.init_compact_gui()
-
-    def init_full_gui(self):
-        self.init_flock_frame(self)
-        self.init_behavior_frame(self)
-        self.init_boid_frame(self)
-        self.init_command_frame(self)
+        self.__widget_flock = _Widget_Flock(self,Alignment.Top)
+        self.__widget_behavior = _Widget_Behavior(self,Alignment.Top)
+        # self.__widget_boid = _Widget_Boid(self,Alignment.Top)
+        self.__widget_commands = _Widget_Commands(self,Alignment.Top, self.load_onclick, self.save_onclick,
+                                                  self.saveas_onclick, self.start_onclick)
 
     def init_compact_gui(self):
-        self.init_full_gui()
+        self.master.title("Python Boids")
+        self.pack(fill=tk.BOTH, expand=True)
+        self.app_window = tk.Toplevel(self.master)
+        self.app_frame = tk.Frame(self.app_window)
+        self.app_window.overrideredirect(True)
+        self.app_frame.pack()
 
-        #button_toggle_flock = tk.Button()
+        self.sw = self.master.winfo_screenwidth() - self.default_width
+        self.sh = self.master.winfo_screenheight() - (self.get_os_title_height()*2 + 10)
+        self.ui_x = -7
+        self.ui_y = 0
+        self.world_x = self.ui_x + self.default_width + 7
+        self.world_y = self.ui_y + self.get_os_title_height()
 
-        #frame_flock = self.init_flock_frame(self)
-        #frame_behavior = self.init_behavior_frame(self)
-        #frame_boid = self.init_boid_frame(self)
+        # self.config.set_size((sw, sh-self.default_height))
 
-        #self.set_frame_visible(frame_behavior,False)
+        self.master.geometry('%dx%d+%d+%d' % (self.default_width, self.sh, self.ui_x, self.ui_y))
+
+        self.__widget_flock = _Widget_Flock(self, Alignment.Left)
+        self.__widget_behavior = _Widget_Behavior(self, Alignment.Left)
+        # self.__widget_boid = _Widget_Boid(self,Alignment.Left)
+        self.__widget_commands = _Widget_Commands(self, Alignment.Left, self.load_onclick, self.save_onclick,
+                                                  self.saveas_onclick, self.start_onclick)
+
+        #self.init_flock_frame(self,Alignment.Left)
+        #self.init_behavior_frame(self,Alignment.Left)
+        #self.init_boid_frame(self,Alignment.Left)
+        #self.init_command_frame(self,Alignment.Left)
 
     def set_frame_visible(self,frame,is_visible):
         if isinstance(frame,tk.Frame) and isinstance(is_visible,bool):
@@ -934,9 +1107,53 @@ class GUI(tk.Frame):
                 self.master.withdraw()
 
     def start_onclick(self,evt=None):
-        value = self.get_world_config()
-        self.world = world.World(value,self)
-        return True
+        if self.world_started == True:
+            self.world.dispose()
+            self.world=None
+            self.__widget_flock.set_enabled(True)
+            self.__widget_behavior.set_enabled(True)
+            self.world_started=False
+        else:
+            value = self.get_world_config()
+            self.world_started = True
+            self.__widget_flock.set_enabled(False)
+            self.__widget_behavior.set_enabled(False)
+            self.world = world.World(value, self)
+
+    def window_enter(self,event):
+        return None
+        if self.world_started==True:
+            self.app_frame.focus_set()
+
+    def key_press(self,event):
+        if event != None and self.world_started==True:
+            if isinstance(event, Event):
+                if event.char == '':
+                    if event.keysym=='Up':
+                        self.world.key_press(CameraMovement.PanUp)
+                    if event.keysym == 'Down':
+                        self.world.key_press(CameraMovement.PanDown)
+                    if event.keysym=='Left':
+                        self.world.key_press(CameraMovement.PanLeft)
+                    if event.keysym == 'Right':
+                        self.world.key_press(CameraMovement.PanRight)
+                else:
+                    if event.char=='z':
+                        self.world.key_press(CameraMovement.ZoomIn)
+                    if event.char == 'x':
+                        self.world.key_press(CameraMovement.ZoomOut)
+                    if event.char=='a':
+                        self.world.key_press(CameraMovement.RotateXLeft)
+                    if event.char == 'd':
+                        self.world.key_press(CameraMovement.RotateXRight)
+                    if event.char == 'w':
+                        self.world.key_press(CameraMovement.RotateYLeft)
+                    if event.char == 's':
+                        self.world.key_press(CameraMovement.RotateYRight)
+                    if event.char == 'q':
+                        self.world.key_press(CameraMovement.RotateZLeft)
+                    if event.char == 'e':
+                        self.world.key_press(CameraMovement.RotateZRight)
 
     def load_onclick(self,evt=None):
         filename=askopenfilename()
