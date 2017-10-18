@@ -197,7 +197,7 @@ class Render:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.exit()
+                #sys.exit()
             if event.type == pygame.KEYDOWN:
                 Render.move_camera(event)
             if event.type == pygame.KEYUP:
@@ -231,7 +231,8 @@ class Render:
 
 
 
-
+    def dispose(self):
+        pygame.quit()
 
 
 if __name__ == "__main__":
