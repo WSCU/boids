@@ -152,7 +152,8 @@ class Render:
             rotate_z = 10
         if event.key == K_e:
             rotate_z = -10
-
+            
+    @staticmethod
     def key_press(event):
         if isinstance(event, Enums.CameraMovement):
             global x_move
