@@ -4,8 +4,6 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 import os
-
-
 import Building
 import Enums
 import random
@@ -13,6 +11,7 @@ import Flock
 import Boid
 import P3
 import World
+import math
 
 x_move = 0
 y_move = 0
@@ -22,11 +21,11 @@ rotate_y = 0
 rotate_z = 0
 
 bird_vertices = (
-            (0, 0, 0),
-            (0, 1, .25),
-            (-1, 1, 0),
-            (0, 1, -.25),
-            (1, 1, 0)
+            (.5, .25, 0),
+            (-.5, .5, -.5),
+            (-.5, -.5, -.5),
+            (-.5, .5, .5),
+            (-.5, -.5, .5)
             )
 ground_vertices = (
     (-100, 100, -.1),
@@ -50,7 +49,7 @@ def start(x, y, width, hieght, depth):
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
 
     gluPerspective(45, (display[0]/display[1]), 0.1, depth)
-    glTranslatef(-10, 30, -250)
+    glTranslatef(-10, 30, -50)
     glRotatef(-45, 1, 1, 1)
 
 
@@ -76,8 +75,22 @@ def ground(gridLines):
 #creates vertices for individual birds (render use only)
 def make_bird_vertices(bird):
     new_vertices = []
+    bird_rotver = []
 
     for vert in bird_vertices:
+        new_vert = []
+        theta = math.atan2(bird.velocity.x, bird.velocity.y)
+        new_x = math.cos(theta)*vert[0] -math.sin(theta)*vert[1]
+        new_y = math.sin(theta)*vert[0] + math.cos(theta)*vert[1]
+        new_z = vert[2]
+        new_vert.append(new_x)
+        new_vert.append(new_y)
+        new_vert.append(new_z)
+
+        bird_rotver.append(new_vert)
+
+
+    for vert in bird_rotver:
         new_vert = []
 
         new_x = vert[0] + bird.position.x
@@ -102,9 +115,9 @@ def draw_bird(vertices):
         (0, 3),
         (0, 4),
         (1, 2),
-        (1, 4),
-        (3, 2),
-        (3, 4)
+        (1, 3),
+        (2, 4),
+        (4, 3)
     )
     glBegin(GL_LINES)
     for edge in edges:
