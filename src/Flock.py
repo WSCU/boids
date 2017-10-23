@@ -8,11 +8,12 @@ import random
 class Flock:
     flock_count = 0
 
-    def __init__(self, num_boids, center=P3.P3(0, 0, 0), radius=20): #possibly also orientation, maybe something about obstacles?
+    def __init__(self, num_boids, ff, center=P3.P3(0, 0, 0), radius=20): #possibly also orientation, maybe something about obstacles?
         Flock.flock_count += 1
         self.boids = []
         self.distance_matrix = [[0 for _ in range(num_boids)] for _ in range(num_boids)]
-
+        self.ff = ff
+        
         # randomly distributes boids in circle on xy plane using center and radius
         for i in range(num_boids):
             r = radius * math.sqrt(random.random())
