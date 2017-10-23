@@ -65,10 +65,10 @@ def ground(gridLines):
     for x in range (1, gridLines):
         glColor3fv((.5, 0, 0))
         y = -100 + (x * (200/gridLines))
-        glVertex3fv((y,-100,-.1))
-        glVertex3fv((y,100,-.1))
-        glVertex3fv((-100,y,-.1))
-        glVertex3fv((100,y,-.1))
+        glVertex3fv((y,-100,0))
+        glVertex3fv((y,100,0))
+        glVertex3fv((-100,y,0))
+        glVertex3fv((100,y,0))
     glEnd()
 
 
@@ -230,7 +230,9 @@ class Render:
         glRotatef(rotate_y, 0.0, 1.0, 0.0)
         glRotatef(rotate_z, 0.0, 0.0, 1.0)
         #glRotatef(rotate, 0.0)
+        glDisable(GL_DEPTH_TEST)
         ground(10)
+        glEnable(GL_DEPTH_TEST)
 
         for building in World.buildings:
             Building.Building.draw_building(building)
