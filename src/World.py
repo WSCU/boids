@@ -79,7 +79,6 @@ class World:
         buildingList = [] # holds touple of center and radius
 
         for building in buildings:
-            buildingPos = P3.P3(building.x, building.y, building.z)
             c = P3.P3(building.x + (building.width / 2), building.y + (building.height / 2),
                       building.z + (building.depth / 2))             # Center of the building
             buildingList.append((c, math.sqrt((building.width/2)**2 + (building.width/2)**2)))
