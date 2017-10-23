@@ -26,6 +26,9 @@ class P3:
         other = other if other is not None else P3(0, 0, 0)
         return math.sqrt((self.x+other.x)**2 + (self.y+other.y)**2 + (self.z+other.z)**2)
 
+    def magnitude(self):
+        return math.sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2)
+
     def normalize(self):
         magnitude = self.distance() if self.distance() != 0 else 1
         return P3(self.x/magnitude, self.y/magnitude, self.z/magnitude)
