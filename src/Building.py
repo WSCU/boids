@@ -38,7 +38,7 @@ class Building(object):
             fDirection = P3.P3.normalize(boidPosition - (boidPosition - c)) # The direction of the force from building to boid
             force = fmagnitude * fDirection                   # Create final force to be returned from its vector
             sum += force                                      # Return the final force on the given boid position (P3)
-        return sum * (1/len(registry))
+        return sum
 		
     # sets building verts (render use only)
 
