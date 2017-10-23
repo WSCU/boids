@@ -45,40 +45,70 @@ def behavior(boid):
 
 # PRIORITY VECTORS, DESIRES:
 
+def alpha(curr,new):
+    return (-P3.dot(curr,new) + math.sqrt(P3.dot(curr,new)**2 - P3.dot(new,new)*(P3.dot(curr,curr)-max_acc^2))/P3.dot(new,new)
+
 def priority_behavior(boid):
-    #max_acc = .1
-    #max_vel = 25
-    #r = 200
-    #nby = [other for other in boid.flock.boids if boid.id > other.id and boid.flock.distance_matrix[boid.id][other.id] <
-           #r or other.id > boid.id and boid.flock.distance_matrix[other.id][boid.id] < r]
+    max_acc = .1
+    max_vel = 25
+    r = 200
+    nby = [other for other in boid.flock.boids if boid.id > other.id and boid.flock.distance_matrix[boid.id][other.id] <
+           r or other.id > boid.id and boid.flock.distance_matrix[other.id][boid.id] < r]
 
-    # Vector 1: Desire to be in middle of flock. As pv1
-    # the difference between the mean position of the boids local neighbors
-    # and the boids current position
-    boidsp_sum = 0
-    for x in nby: #?
-        boidsp_sum += x
-    mean_position = boidsp_sum / len(nby)
-    pv1 = P3.P3(0, 0, 0)
-    for x in nby: #?
-        v1 = mean_position - boid.position
+    # collision avoidance
+    r2 = 50
+    avoid = [other for other in nby if boid.id > other.id and boid.flock.distance_matrix[boid.id][other.id] < r2
+             or other.id > boid.id and boid.flock.distance_matrix[other.id][boid.id] < r2]
+    v1 = P3.P3(0, 0, 0)
+    for other in avoid:
+        v1 += other.position - boid.position * (1 / boid.position.distance(other.position) ** 2)
 
-    # Vector 2: Desire to fly in same direction. As pv2
-    # the difference between the mean velocity of the boids local neighbors
-    # and the boids current velocity
-    sum_vel = 0
-    for x in nby:
-        sum_vel += x.velocity
-    mean_velocities = sum_vel/len(nby)
-    pv2 = mean_velocities - boid.position
+    # velocity matching
+    v2 = P3.P3(0, 0, 0)
+    for b in nby:
+        v2 += b.velocity
+    if len(nby) > 1:
+        v2 *= 1 / len(nby)
+    v2 -= boid.velocity
 
-    # Vector 3: Obstacle avoidance. As pv3
-    # a weighted sum of differences between close neighbors’ positions
-    # and boids current position as well as differences from stationary objects
-    diff_boids
-    for x in nby:
-        diff_boids = x - boid.position
-    pv3 = 0
+    # flock centering
+    v3 = P3.P3(0, 0, 0)
+    for b in nby:
+        v3 += b.position
+    if len(nby) > 1:
+        v3 *= 1 / len(nby)
+    v3 -= boid.position
 
+    #scalling temp
+
+    v1 *= 0.00001
+    v2 *= 0.00002
+    v3 *= 0.001
+
+    res = v1  # res includes only v1
+    # res *= 1 / 100
+    print("bringing in v1: {} ".format(v1.distance()))
+
+
+
+    if res.distance() > max_acc:
+        res = (max_acc / res.distance()) * res
+        return res
+    print("bringing in v2: {} ".format(v2.distance()))
+    alpha1 = (-2 * (P3.dot(v1, v2)) + math.sqrt(math.pow((2 * P3.dot(v1, v2)), 2) + (4 * (P3.dot(v2, v2))) * (math.pow(max_acc, 2) - P3.dot(v1, v2)))) / 2 * P3.dot(v2, v2)
+    alpha1 = alpha(res,v2)
+    print(alpha1)
+    if alpha1 < 1:
+        return res + alpha1 *v2
+    res = res + v2
+    print("Bringing in v3: ".format(v3.distance()))
+
+    alpha2 = (-2 * (P3.dot(res, v3)) + math.sqrt(math.pow((2 * P3.dot(res, v3)), 2) + (4 * (P3.dot(v3, v3))) * (math.pow(max_acc, 2) - P3.dot(res, v3)))) / 2 * P3.dot(v3, v3)
+    alpha2 = alpha(res,v3)
+    if alpha2 < 1:
+        return res + alpha2 * v3
+    else:
+        print("in else")
+        return res +v3
 
 # END OF PRIORITY VECTORS
